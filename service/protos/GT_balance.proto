@@ -1,0 +1,50 @@
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.gtrouter";
+option java_outer_classname = "GtRouterProto";
+option objc_class_prefix = "GTR";
+
+package gtrouter;
+
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+  // Send another greetingly
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+
+  rpc CPUProcessRequest (CPU_coresRequest) returns (HelloReply) {}
+
+  rpc GetCPUtemp (HelloRequest) returns (HelloReply){}
+
+  rpc GetFanRotation (HelloRequest) returns (HelloReply) {}
+
+  rpc GetCPUutil (HelloRequest) returns (CPUutilReply){}
+
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
+
+message CPU_coresRequest{
+  int32 cpu_cores = 1;
+  int32 time = 2;
+}
+
+message ServerReply{
+  string mess_1 = 1;
+  string mess_2 = 2;
+}
+
+message CPUutilReply{
+  string message = 1;
+  int32  cpu_util = 2;
+}
