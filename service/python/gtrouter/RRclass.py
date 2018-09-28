@@ -30,7 +30,7 @@ class RR:
       if q.empty():
         print("Empty")
       else:
-        global Kid1_queue
+        global Kid_queue
         tmp=q.get()
         Kid_queue.put(tmp)
         return(Kid_queue)

@@ -117,8 +117,15 @@ def GetSixCores():
         global Balancer_Queue
         Balancer_Queue=hoge.Enqueue_TO_KID1(Jobs_queue)
         i+=1
-
     return Balancer_Queue
+
+def Contents_confir(queue):
+    Contents=[]
+    for i in range(queue.qsize()):
+        tmp=queue.get()
+        Contents.append(tmp)
+    return Contents
+
 
 # Here are load balancing methods
 
@@ -128,21 +135,17 @@ def RoundRobin(Jobs):
     hoge.SayHello()
     Jobs_queue=hoge.All_Enqueue(Jobs)
     print("All jobs size is %d" % Jobs_queue.qsize())
+
+# Getting 6 jobs to Balaning queue
     i=0
     while i < 6:
         demo_queue=hoge.Enqueue_TO_KID(Jobs_queue)
         i+=1
     print("Demo Queue size is %d" % demo_queue.qsize())
-    Demo_QUEUE_contents=[]
-    for i in range(demo_queue.qsize()):
-        tmp=demo_queue.get()
-        Demo_QUEUE_contents.append(tmp)
-    print("Demo Queue contents are", Demo_QUEUE_contents)
-    Jobs_QUEUE_contents=[]
-    for i in range(Jobs_queue.qsize()):
-        tmp=Jobs_queue.get()
-        Jobs_QUEUE_contents.append(tmp)
-    print("All jobs contents are", Jobs_QUEUE_contents)
+
+# Confirming the content
+    print("Demo Queue contents are", Contents_confir(demo_queue))
+    print("All jobs contents are", Contents_confir(Jobs_queue))
 
     while not demo_queue.empty():
         # RoundRobin

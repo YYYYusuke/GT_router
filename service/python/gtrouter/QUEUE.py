@@ -47,7 +47,6 @@ def Enqueue_TO_KID5(q):
     tmp=q.get()
     Kid5_queue.put(tmp)
 
-
 def Dequeue(q):
   if q.empty():
     #break
@@ -56,6 +55,13 @@ def Dequeue(q):
     i = q.get()
     print("Dequeue:%d" %i)
   return i
+
+def Contents_confir(queue):
+    Contents=[]
+    for i in range(queue.qsize()):
+        tmp=queue.get()
+        Contents.append(tmp)
+    return Contents
 
 def RR():
   while not Jobs_queue.empty():
@@ -81,7 +87,14 @@ if __name__ == '__main__':
   print("---------")
  
   RR()
+
   print("KID1 queue size is %d" % Kid1_queue.qsize())
   print("KID3 queue size is %d" % Kid3_queue.qsize())
   print("KID5 queue size is %d" % Kid5_queue.qsize())
   
+  print("KID1's contents are ", Contents_confir(Kid1_queue))
+  print("KID3's contents are ", Contents_confir(Kid3_queue))
+  print("KID5's contents are ", Contents_confir(Kid5_queue))
+
+
+
