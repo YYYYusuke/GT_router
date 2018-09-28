@@ -1,17 +1,23 @@
-
 from __future__ import print_function
 import grpc
 import GT_balance_pb2
 import GT_balance_pb2_grpc
 import time
-import Queue
+from Queue import Queue
 import threading
 
 #Myclass
 import RRclass
 
 
-Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+Jobs=[11,22,13,14,15,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+
+
+Balancer_Queue=Queue()
+KID1_Queue=Queue()
+KID3_Queue=Queue()
+KID5_Queue=Queue()
+
 IDX=0
 CPU_util_state=[0,0,0,0,0,0]
 is_continued=True
@@ -101,20 +107,54 @@ def Process_Request(stub, CPUCORES, TIME):
     print("Response: " + response.message)
     return response
 
-# Here are load balancing methods
-
-def RoundRobin(Jobs):
-    print("Round_Robin")
+def GetSixCores():
 
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
     Jobs_queue=hoge.All_Enqueue(Jobs)
-    print("All jobs size is %d" % Jobs_queue.qsize())
-    Kid1_queue=hoge.Enqueue_TO_KID1(Jobs_queue)
-    print("KID1 queue size is %d" % Kid1_queue.qsize())
+    i=0
+    while i < 6:
+        global Balancer_Queue
+        Balancer_Queue=hoge.Enqueue_TO_KID1(Jobs_queue)
+        i+=1
 
-    while not Jobs_queue.empty():
-        
+    return Balancer_Queue
+
+# Here are load balancing methods
+
+def RoundRobin(Jobs):
+    print("Round_Robin")
+    hoge=RRclass.RR() # Make an instance
+    hoge.SayHello()
+    Jobs_queue=hoge.All_Enqueue(Jobs)
+    print("All jobs size is %d" % Jobs_queue.qsize())
+    i=0
+    while i < 6:
+        demo_queue=hoge.Enqueue_TO_KID(Jobs_queue)
+        i+=1
+    print("Demo Queue size is %d" % demo_queue.qsize())
+    Demo_QUEUE_contents=[]
+    for i in range(demo_queue.qsize()):
+        tmp=demo_queue.get()
+        Demo_QUEUE_contents.append(tmp)
+    print("Demo Queue contents are", Demo_QUEUE_contents)
+    Jobs_QUEUE_contents=[]
+    for i in range(Jobs_queue.qsize()):
+        tmp=Jobs_queue.get()
+        Jobs_QUEUE_contents.append(tmp)
+    print("All jobs contents are", Jobs_QUEUE_contents)
+
+    while not demo_queue.empty():
+        # RoundRobin
+        KID1_Queue=hoge.Enqueue_TO_KID(demo_queue)
+        KID3_Queue=hoge.Enqueue_TO_KID(demo_queue)
+        KID5_Queue=hoge.Enqueue_TO_KID(demo_queue)
+    
+    print("KID1 queue size is %d" % KID1_Queue.qsize())
+    print("KID3 queue size is %d" % KID3_Queue.qsize())
+    print("KID5 queue size is %d" % KID5_Queue.qsize())
+    print("Demo Queue size is %d" % demo_queue.qsize())
+    print("All jobs size is %d" % Jobs_queue.qsize())
 
 def ThermalBased():
     
