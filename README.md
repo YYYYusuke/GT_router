@@ -1,5 +1,6 @@
 # GT_router
 
+Written by nakajo@west.sd.keio.ac.jp
 
 ## Overview
 

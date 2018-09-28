@@ -23,28 +23,29 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
         num_cpu=request.cpu_cores
         timeout=request.time
-        print("Processed_cpu is", num_cpu, "Processed_time is", timeout)
-
+        print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
+        
+        #stress cores on CPU ex) stress --cpu 15 --timeout 30s
         #cmd = ['ls', '-l', '/usr/bin']
         #subprocess.run(cmd)
         time.sleep(timeout)
         #os.system("ls")
-        #stress cores on CPU ex) stress --cpu 15 --timeout 30s
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
-
+        
         return GT_balance_pb2.HelloReply(message='This is CPUtemp, %s!' % request.name)
 
     def GetFanRotation (self, request, context):
-
+        
         return GT_balance_pb2.HelloReply(message='This is Fan Rotation, %s!' % request.name)
 
     def GetCPUutil (self, request, context):
-
+        
         # Getting CPU's utilization
         MSG_from_Client=request.name
         num =199
+
         return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=num)
 
 
