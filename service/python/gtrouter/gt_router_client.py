@@ -4,7 +4,12 @@ import grpc
 import GT_balance_pb2
 import GT_balance_pb2_grpc
 import time
+import Queue
 import threading
+
+#Myclass
+import RRclass
+
 
 Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 IDX=0
@@ -98,10 +103,18 @@ def Process_Request(stub, CPUCORES, TIME):
 
 # Here are load balancing methods
 
-def RoundRobin():
-    
+def RoundRobin(Jobs):
     print("Round_Robin")
 
+    hoge=RRclass.RR() # Make an instance
+    hoge.SayHello()
+    Jobs_queue=hoge.All_Enqueue(Jobs)
+    print("All jobs size is %d" % Jobs_queue.qsize())
+    Kid1_queue=hoge.Enqueue_TO_KID1(Jobs_queue)
+    print("KID1 queue size is %d" % Kid1_queue.qsize())
+
+    while not Jobs_queue.empty():
+        
 
 def ThermalBased():
     
@@ -113,6 +126,12 @@ def CPUBased():
 
 if __name__ == '__main__':
     
+    RoundRobin(Jobs)
+
+
+
+# For thread
+    """
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
     thread_5 = threading.Thread(target=Run_KID5)
@@ -136,7 +155,7 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-
+    """
     
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(10)
