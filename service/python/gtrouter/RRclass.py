@@ -26,11 +26,10 @@ class RR:
         KID_queue=q.get()
         return(KID_queue)
 
-    def Enqueue_TO_KID(self, q):
+    def Enqueue_TO_KID(self,Kid_queue, q):
       if q.empty():
         print("Empty")
       else:
-        global Kid_queue
         tmp=q.get()
         Kid_queue.put(tmp)
         return(Kid_queue)

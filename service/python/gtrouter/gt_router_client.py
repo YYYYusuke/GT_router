@@ -17,8 +17,8 @@ Balancer_Queue=Queue()
 KID1_Queue=Queue()
 KID3_Queue=Queue()
 KID5_Queue=Queue()
+demo_queue=Queue()
 
-IDX=0
 CPU_util_state=[0,0,0,0,0,0]
 is_continued=True
 
@@ -27,11 +27,9 @@ def Run_KID1():
     while is_continued:
         # Havin a connection
         stub=Connect_servers('localhost:50051', 'KID1')
-        global IDX
-        cpu_core=Get_JOB(IDX)
+        # Getting a job from own queue
+        cpu_core=KID1_Queue.get()
         Process_Request(stub,cpu_core, 3)
-        global IDX
-        IDX += 1
         time.sleep(1)
     
 
@@ -40,11 +38,9 @@ def Run_KID3():
     while is_continued:
         # Having a connection
         stub=Connect_servers('localhost:50052', 'KID3')
-        global IDX
-        cpu_core=Get_JOB(IDX)
+        # Getting a job from own queue
+        cpu_core=KID3_Queue.get()
         Process_Request(stub, cpu_core, 1)
-        global IDX
-        IDX += 1
         time.sleep(1)
     
 
@@ -53,11 +49,9 @@ def Run_KID5():
     while is_continued:
         # Having a connection
         stub=Connect_servers('localhost:50053', 'KID5')
-        global IDX
-        cpu_core=Get_JOB(IDX)
+        # Getting a job from own queue
+        cpu_core=KID5_Queue.get()
         Process_Request(stub, cpu_core, 1)
-        global IDX
-        IDX += 1
         time.sleep(1)
 
 def ListenServeState_KID1():
@@ -84,9 +78,6 @@ def ListenServeState_KID5():
         global CPU_util_state
         CPU_util_state[2]=Get_CPUutil(stub)
 
-def Get_JOB(idx):
-    cpu_core=Jobs[idx]
-    return cpu_core
 
 def Connect_servers(server_addr_port, server_name):
     channel = grpc.insecure_channel(server_addr_port)
@@ -111,53 +102,69 @@ def GetSixCores():
 
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
-    Jobs_queue=hoge.All_Enqueue(Jobs)
     i=0
     while i < 6:
         global Balancer_Queue
-        Balancer_Queue=hoge.Enqueue_TO_KID1(Jobs_queue)
+        global Jobs_queue
+        Balancer_Queue=hoge.Enqueue_TO_KID(Balancer_Queue, Jobs_queue)
         i+=1
-    return Balancer_Queue
+    print("Captured six cores at Load balancer")
 
 def Contents_confir(queue):
     Contents=[]
-    for i in range(queue.qsize()):
-        tmp=queue.get()
+    queueCopy=queue
+    for i in range(queueCopy.qsize()):
+        tmp=queueCopy.get()
         Contents.append(tmp)
     return Contents
 
+def Daemon():
+    print("Daemon")
 
 # Here are load balancing methods
 
-def RoundRobin(Jobs):
-    print("Round_Robin")
+def RRbin():
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
+    while not Balancer_Queue.empty():
+        # Round_Robin
+        global KID1_Queue
+        global KID3_Queue
+        global KID5_Queue
+        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
+        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
+        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+
+
+
+def RoundRobin():
+    print("Start !!")
+    hoge=RRclass.RR() # Make an instance
+    hoge.SayHello()
+    global Jobs_queue
+    global Jobs
     Jobs_queue=hoge.All_Enqueue(Jobs)
     print("All jobs size is %d" % Jobs_queue.qsize())
-
-# Getting 6 jobs to Balaning queue
-    i=0
-    while i < 6:
-        demo_queue=hoge.Enqueue_TO_KID(Jobs_queue)
-        i+=1
-    print("Demo Queue size is %d" % demo_queue.qsize())
-
-# Confirming the content
-    print("Demo Queue contents are", Contents_confir(demo_queue))
-    print("All jobs contents are", Contents_confir(Jobs_queue))
-
-    while not demo_queue.empty():
-        # RoundRobin
-        KID1_Queue=hoge.Enqueue_TO_KID(demo_queue)
-        KID3_Queue=hoge.Enqueue_TO_KID(demo_queue)
-        KID5_Queue=hoge.Enqueue_TO_KID(demo_queue)
     
+    while is_continued:
+        GetSixCores()
+        RRbin()
+    
+
+# Confirming the Contents
+
+    """
+    print("Balancer_Queue contents are", Contents_confir(Balancer_Queue))
+    print("All jobs contents are", Contents_confir(Jobs_queue))
+    print("KID1_Queue contents are", Contents_confir(KID1_Queue))
+    print("KID3_Queue contents are", Contents_confir(KID3_Queue))
+    print("KID5_Queue contents are", Contents_confir(KID5_Queue))
+    print("Demo Queue size is %d" % Balancer_Queue.qsize())
+    print("All jobs size is %d" % Jobs_queue.qsize())
     print("KID1 queue size is %d" % KID1_Queue.qsize())
     print("KID3 queue size is %d" % KID3_Queue.qsize())
     print("KID5 queue size is %d" % KID5_Queue.qsize())
-    print("Demo Queue size is %d" % demo_queue.qsize())
-    print("All jobs size is %d" % Jobs_queue.qsize())
+    """
 
 def ThermalBased():
     
@@ -169,9 +176,23 @@ def CPUBased():
 
 if __name__ == '__main__':
     
-    RoundRobin(Jobs)
+    thread=threading.Thread(target=(RoundRobin))
+    thread_1 = threading.Thread(target=Run_KID1)
+    thread_3 = threading.Thread(target=Run_KID3)
+    thread_5 = threading.Thread(target=Run_KID5)
+    thread.setDaemon(True)
+    thread_1.setDaemon(True)
+    thread_3.setDaemon(True)
+    thread_5.setDaemon(True)
+    thread.start()
+    time.sleep(1)
+    thread_1.start()
+    time.sleep(1)
+    thread_3.start()
+    time.sleep(1)
+    thread_5.start()
 
-
+    
 
 # For thread
     """
@@ -201,6 +222,6 @@ if __name__ == '__main__':
     """
     
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(10)
+    time.sleep(50)
     is_continued=False
     
