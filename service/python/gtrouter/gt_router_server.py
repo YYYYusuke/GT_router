@@ -26,10 +26,9 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         
         #stress cores on CPU ex) stress --cpu 15 --timeout 30s
-        #cmd = ['ls', '-l', '/usr/bin']
-        #subprocess.run(cmd)
+	os.system("stress --cpu " + str(num_cpu) + "--timeout " + str(timeout) + "s")
+        os.system("stress --cpu " + str(num_cpu) + "--timeout " + "1s")
         time.sleep(timeout)
-        os.system("stress --cpu " + num_cpu + "--timeout " + "1s")
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
