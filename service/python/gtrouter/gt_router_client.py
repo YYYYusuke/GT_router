@@ -30,7 +30,8 @@ def Run_KID1():
         stub=Connect_servers('localhost:50051', 'KID1')
         # Getting a job from own queue
         cpu_core=KID1_Queue.get()
-        Process_Request(stub,cpu_core, 3)
+        timeout=random.randint(0,5)
+        Process_Request(stub,cpu_core, timeout)
         time.sleep(1)
     
 
@@ -41,7 +42,8 @@ def Run_KID3():
         stub=Connect_servers('localhost:50052', 'KID3')
         # Getting a job from own queue
         cpu_core=KID3_Queue.get()
-        Process_Request(stub, cpu_core, 1)
+        timeout=random.randint(0,5)
+        Process_Request(stub, cpu_core, timeout)
         time.sleep(1)
     
 
@@ -52,7 +54,8 @@ def Run_KID5():
         stub=Connect_servers('localhost:50053', 'KID5')
         # Getting a job from own queue
         cpu_core=KID5_Queue.get()
-        Process_Request(stub, cpu_core, 1)
+        timeout=random.randint(0,5)
+        Process_Request(stub, cpu_core, timeout)
         time.sleep(1)
 
 def ListenServeState_KID1():
