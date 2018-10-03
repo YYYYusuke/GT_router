@@ -17,9 +17,10 @@ Balancer_Queue=Queue()
 KID1_Queue=Queue()
 KID3_Queue=Queue()
 KID5_Queue=Queue()
-demo_queue=Queue()
 
 CPU_util_state=[0,0,0,0,0,0]
+CPU_temp_state=[0,0,0,0,0,0]
+
 is_continued=True
 
 def Run_KID1():
@@ -61,6 +62,7 @@ def ListenServeState_KID1():
         stub=Connect_servers('localhost:50051', 'KID1')
         global CPU_util_state
         CPU_util_state[0]=Get_CPUutil(stub)
+        print(CPU_util_state)
 
 def ListenServeState_KID3():
     
@@ -69,6 +71,7 @@ def ListenServeState_KID3():
         stub=Connect_servers('localhost:50052', 'KID3')
         global CPU_util_state
         CPU_util_state[1]=Get_CPUutil(stub)
+        print(CPU_util_state)
 
 def ListenServeState_KID5():
     
@@ -77,25 +80,25 @@ def ListenServeState_KID5():
         stub=Connect_servers('localhost:50053', 'KID5')
         global CPU_util_state
         CPU_util_state[2]=Get_CPUutil(stub)
-
+        print(CPU_util_state)
 
 def Connect_servers(server_addr_port, server_name):
     channel = grpc.insecure_channel(server_addr_port)
     stub = GT_balance_pb2_grpc.GreeterStub(channel)
     response = stub.SayHello(GT_balance_pb2.HelloRequest(name=server_name))
-    print("Load_Balancer recieved:" + response.message)
+    #print("Load_Balancer recieved:" + response.message)
     return stub
 
 
 def Get_CPUutil(stub):
-    response = stub.GetCPUutil(GT_balance_pb2.HelloRequest(name='cpu_usage'))
+    response = stub.GetCPUutil(GT_balance_pb2.HelloRequest(name='Give me cpu_usage'))
     #print("Response:", response.message)
     #print("CPU_util:", response.cpu_util)
     return response.cpu_util
     
 def Process_Request(stub, CPUCORES, TIME):
     response = stub.CPUProcessRequest(GT_balance_pb2.CPU_coresRequest(cpu_cores=CPUCORES, time=TIME))
-    print("Response: " + response.message)
+    #print("Response: " + response.message)
     return response
 
 def GetSixCores():
@@ -126,8 +129,47 @@ def Daemon():
 def RRbin():
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
+    # Round_Robin
     while not Balancer_Queue.empty():
-        # Round_Robin
+        global KID1_Queue
+        global KID3_Queue
+        global KID5_Queue
+        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
+        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
+        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+
+def ThermalBased():
+    print("ThermalBased")
+    hoge=RRclass.RR() # Make an instance
+    hoge.SayHello()
+    # ThermalBased
+    while not Balancer_Queue.empty():
+        
+        # Sorting algorithms part
+        
+        
+        
+        # Queueing part
+        global KID1_Queue
+        global KID3_Queue
+        global KID5_Queue
+        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
+        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
+        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+
+def CPUBased():
+    print("CPUBased:")
+    hoge=RRclass.RR() # Make an instance
+    hoge.SayHello()
+    # CPUBased
+    while not Balancer_Queue.empty():
+        
+        # Sorting alogorithm part
+        
+        
+        
+        # Queueing part
+        
         global KID1_Queue
         global KID3_Queue
         global KID5_Queue
@@ -136,8 +178,7 @@ def RRbin():
         KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
 
 
-
-def RoundRobin():
+def RunBalancing():
     print("Start !!")
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
@@ -166,17 +207,10 @@ def RoundRobin():
     print("KID5 queue size is %d" % KID5_Queue.qsize())
     """
 
-def ThermalBased():
-    
-    print("ThermalBased")
-
-def CPUBased():
-    
-    print("CPUBased:")
 
 if __name__ == '__main__':
-    
-    thread=threading.Thread(target=(RoundRobin))
+    """    
+    thread=threading.Thread(target=(RunBalancing))
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
     thread_5 = threading.Thread(target=Run_KID5)
@@ -191,11 +225,10 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-
+    """
     
 
 # For thread
-    """
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
     thread_5 = threading.Thread(target=Run_KID5)
@@ -219,7 +252,6 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-    """
     
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(50)

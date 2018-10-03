@@ -1,10 +1,10 @@
-
 from concurrent import futures
 import time
 import subprocess
 import grpc
 import os
 import sys
+import random
 #import psutil
 import GT_balance_pb2
 import GT_balance_pb2_grpc
@@ -41,11 +41,13 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.HelloReply(message='This is Fan Rotation, %s!' % request.name)
 
     def GetCPUutil (self, request, context):
-        
         # Getting CPU's utilization
-        MSG_from_Client=request.name
-        num =199
+        # os.system(uptime)
 
+        #MSG_from_Client=request.name
+        MSG_from_Client="THis is cpu usage"
+        #num =random.random()
+        num = random.randint(0,10)
         return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=num)
 
 
