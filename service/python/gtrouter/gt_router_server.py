@@ -14,6 +14,7 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
     def SayHello(self, request, context):
+        print('hgoe')
         return GT_balance_pb2.HelloReply(message='Hello! Processed server is %s' % request.name)
 
     def SayHelloAgain(self, request, context):
