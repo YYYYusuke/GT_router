@@ -14,7 +14,6 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
     def SayHello(self, request, context):
-        print('hgoe')
         return GT_balance_pb2.HelloReply(message='Hello! Processed server is %s' % request.name)
 
     def SayHelloAgain(self, request, context):
@@ -28,7 +27,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         
         #stress cores on CPU ex) stress --cpu 15 --timeout 30s
         #os.system("stress --cpu " + str(num_cpu) + "--timeout " + "1s")
-        os.system("stress --cpu " + str(num_cpu) + "--timeout " + str(timeout) + "s")
+        os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
         
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
@@ -43,7 +42,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
     def GetCPUutil (self, request, context):
         # Getting CPU's utilization
         # os.system(uptime)
-
+	print(psutil.cpu_percert(interval=1))
         #MSG_from_Client=request.name
         MSG_from_Client="THis is cpu usage"
         #num =random.random()

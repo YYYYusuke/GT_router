@@ -3,6 +3,7 @@ import grpc
 import GT_balance_pb2
 import GT_balance_pb2_grpc
 import time
+import random
 from Queue import Queue
 import threading
 
@@ -212,7 +213,7 @@ def RunBalancing():
 
 
 if __name__ == '__main__':
-    """    
+        
     thread=threading.Thread(target=(RunBalancing))
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
@@ -228,10 +229,11 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-    """
+    
     
 
 # For thread
+    """
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
     thread_5 = threading.Thread(target=Run_KID5)
@@ -255,7 +257,8 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-    
+    """
+
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(50)
     is_continued=False
