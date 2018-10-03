@@ -29,7 +29,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         #cmd = ['ls', '-l', '/usr/bin']
         #subprocess.run(cmd)
         time.sleep(timeout)
-        #os.system("ls")
+        os.system("stress --cpu " + num_cpu + "--timeout " + "1s")
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
@@ -83,5 +83,3 @@ if __name__ == '__main__':
     args =sys.argv
     print(args[1], args[2])
     serve_based_addr(args[1], args[2])
-
-
