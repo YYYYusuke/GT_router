@@ -1,4 +1,3 @@
-
 syntax = "proto3";
 
 option java_multiple_files = true;
@@ -16,9 +15,9 @@ service Greeter {
 
   rpc CPUProcessRequest (CPU_coresRequest) returns (HelloReply) {}
 
-  rpc GetCPUtemp (HelloRequest) returns (HelloReply){}
+  rpc GetCPUtemp (HelloRequest) returns (CPUtempReply){}
 
-  rpc GetFanRotation (HelloRequest) returns (HelloReply) {}
+  rpc GetFanRotation (HelloRequest) returns (FanReply) {}
 
   rpc GetCPUutil (HelloRequest) returns (CPUutilReply){}
 
@@ -46,5 +45,15 @@ message ServerReply{
 
 message CPUutilReply{
   string message = 1;
-  int32  cpu_util = 2;
+  float  cpu_util = 2;
+}
+
+message CPUtempReply{
+  string message = 1;
+  int32  cpu_temp = 2;
+}
+
+message FanReply{
+  string message = 1;
+  float  fan_speed = 2;
 }

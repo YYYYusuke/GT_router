@@ -32,12 +32,12 @@ class GreeterStub(object):
     self.GetCPUtemp = channel.unary_unary(
         '/gtrouter.Greeter/GetCPUtemp',
         request_serializer=GT__balance__pb2.HelloRequest.SerializeToString,
-        response_deserializer=GT__balance__pb2.HelloReply.FromString,
+        response_deserializer=GT__balance__pb2.CPUtempReply.FromString,
         )
     self.GetFanRotation = channel.unary_unary(
         '/gtrouter.Greeter/GetFanRotation',
         request_serializer=GT__balance__pb2.HelloRequest.SerializeToString,
-        response_deserializer=GT__balance__pb2.HelloReply.FromString,
+        response_deserializer=GT__balance__pb2.FanReply.FromString,
         )
     self.GetCPUutil = channel.unary_unary(
         '/gtrouter.Greeter/GetCPUutil',
@@ -113,12 +113,12 @@ def add_GreeterServicer_to_server(servicer, server):
       'GetCPUtemp': grpc.unary_unary_rpc_method_handler(
           servicer.GetCPUtemp,
           request_deserializer=GT__balance__pb2.HelloRequest.FromString,
-          response_serializer=GT__balance__pb2.HelloReply.SerializeToString,
+          response_serializer=GT__balance__pb2.CPUtempReply.SerializeToString,
       ),
       'GetFanRotation': grpc.unary_unary_rpc_method_handler(
           servicer.GetFanRotation,
           request_deserializer=GT__balance__pb2.HelloRequest.FromString,
-          response_serializer=GT__balance__pb2.HelloReply.SerializeToString,
+          response_serializer=GT__balance__pb2.FanReply.SerializeToString,
       ),
       'GetCPUutil': grpc.unary_unary_rpc_method_handler(
           servicer.GetCPUutil,

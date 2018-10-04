@@ -142,8 +142,8 @@ def RRbin():
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
         KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
 
-def ThermalBased():
-    print("ThermalBased")
+def ThermalBased_static():
+    print("ThermalBased_static")
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
     # ThermalBased
@@ -161,8 +161,8 @@ def ThermalBased():
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
         KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
 
-def CPUBased():
-    print("CPUBased:")
+def CPUBased_static():
+    print("CPUBased_static")
     hoge=RRclass.RR() # Make an instance
     hoge.SayHello()
     # CPUBased
@@ -181,6 +181,11 @@ def CPUBased():
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
         KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
 
+def CPUBased_dynamic():
+    print("CPUBased_dynamic")
+
+def ThermalBased_dynamic():
+    print("ThermalBased_dynamic")
 
 def RunBalancing():
     print("Start !!")

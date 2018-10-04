@@ -5,7 +5,7 @@ import grpc
 import os
 import sys
 import random
-#import psutil
+import commands
 import GT_balance_pb2
 import GT_balance_pb2_grpc
 
@@ -32,22 +32,27 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
-        
-        return GT_balance_pb2.HelloReply(message='This is CPUtemp, %s!' % request.name)
+        cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")
+	CPU_temp=cpu_temp.split(",")
+	SumOfCPUtemp=int(CPU_temp[1])+int(CPU_temp[4])
+	cpu_temp=SumOfCPUtemp/2
+        return GT_balance_pb2.HelloReply(message='This is CPUtemp, %s!', cpu_temp=cpu_temp)
 
     def GetFanRotation (self, request, context):
-        
-        return GT_balance_pb2.HelloReply(message='This is Fan Rotation, %s!' % request.name)
+	fan_rotation=commands.getoutput("sudo ipmitool -c sdr list | grep Fan")
+	Fan_rotation=fan_rotation.split(",")
+	SumOfFan=float(Fan_rotation[1])+float(Fan_rotation[6])
+	fan_speed=SumOfFan/2
+        return GT_balance_pb2.HelloReply(message="Fan_speed",fan_speed=fan_spped )
 
     def GetCPUutil (self, request, context):
         # Getting CPU's utilization
-        # os.system(uptime)
-	print(psutil.cpu_percert(interval=1))
-        #MSG_from_Client=request.name
-        MSG_from_Client="THis is cpu usage"
-        #num =random.random()
-        num = random.randint(0,10)
-        return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=num)
+        MSG_from_Client="THis is cpu usage within 1 min"
+	uptime=commands.getoutput("uptime")
+	Load_avg=uptime.split(":")
+	LoadAvg=Load_avg[-1].split(",")
+        cpu_util=float(LoadAvg[0]) 
+	return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=cpu_util)
 
 
 def serve():
