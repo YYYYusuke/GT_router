@@ -21,6 +21,7 @@ KID5_Queue=Queue()
 
 CPU_util_state=[0,0,0,0,0,0]
 CPU_temp_state=[0,0,0,0,0,0]
+Fan_state=[0,0,0,0,0,0]
 
 is_continued=True
 
@@ -65,8 +66,14 @@ def ListenServeState_KID1():
         # Havin a connection
         stub=Connect_servers('localhost:50051', 'KID1')
         global CPU_util_state
+	global CPU_temp_state
+	global Fan_state
         CPU_util_state[0]=Get_CPUutil(stub)
+	CPU_temp_state[0]=Get_CPUtemp(stub)
+	Fan_state[0]=Get_FAN(stub)
         print(CPU_util_state)
+        print(CPU_temp_state)
+        print(Fan_state)
 
 def ListenServeState_KID3():
     
@@ -74,8 +81,11 @@ def ListenServeState_KID3():
         # Havin a connection
         stub=Connect_servers('localhost:50052', 'KID3')
         global CPU_util_state
+	global CPU_temp_state
+	global Fan_state
         CPU_util_state[1]=Get_CPUutil(stub)
-        print(CPU_util_state)
+	CPU_temp_state[1]=Get_CPUtemp(stub)
+	Fan_state[1]=Get_FAN(stub)
 
 def ListenServeState_KID5():
     
@@ -83,8 +93,11 @@ def ListenServeState_KID5():
         # Havin a connection
         stub=Connect_servers('localhost:50053', 'KID5')
         global CPU_util_state
+	global CPU_temp_state
+	global Fanstate
         CPU_util_state[2]=Get_CPUutil(stub)
-        print(CPU_util_state)
+	CPU_temp_state[2]=Get_CPUtemp(stub)
+	Fan_state[2]=Get_FAN(stub)
 
 def Connect_servers(server_addr_port, server_name):
     channel = grpc.insecure_channel(server_addr_port)
@@ -93,13 +106,24 @@ def Connect_servers(server_addr_port, server_name):
     #print("Load_Balancer recieved:" + response.message)
     return stub
 
-
 def Get_CPUutil(stub):
     response = stub.GetCPUutil(GT_balance_pb2.HelloRequest(name='Give me cpu_usage'))
     #print("Response:", response.message)
     #print("CPU_util:", response.cpu_util)
     return response.cpu_util
+
+def Get_FAN(stub):
+    response = stub.GetFanRotation(GT_balance_pb2.HelloRequest(name='Give me fan_speed'))
+    #print("Response:", response.message)
+    #print("CPU_util:", response.cpu_util)
+    return response.fan_speed
     
+def Get_CPUtemp(stub):
+    response = stub.GetCPUtemp(GT_balance_pb2.HelloRequest(name='Give me cpu_temp'))
+    #print("Response:", response.message)
+    #print("CPU_util:", response.cpu_util)
+    return response.cpu_temp
+
 def Process_Request(stub, CPUCORES, TIME):
     response = stub.CPUProcessRequest(GT_balance_pb2.CPU_coresRequest(cpu_cores=CPUCORES, time=TIME))
     #print("Response: " + response.message)
@@ -201,24 +225,9 @@ def RunBalancing():
         RRbin()
     
 
-# Confirming the Contents
-
-    """
-    print("Balancer_Queue contents are", Contents_confir(Balancer_Queue))
-    print("All jobs contents are", Contents_confir(Jobs_queue))
-    print("KID1_Queue contents are", Contents_confir(KID1_Queue))
-    print("KID3_Queue contents are", Contents_confir(KID3_Queue))
-    print("KID5_Queue contents are", Contents_confir(KID5_Queue))
-    print("Demo Queue size is %d" % Balancer_Queue.qsize())
-    print("All jobs size is %d" % Jobs_queue.qsize())
-    print("KID1 queue size is %d" % KID1_Queue.qsize())
-    print("KID3 queue size is %d" % KID3_Queue.qsize())
-    print("KID5 queue size is %d" % KID5_Queue.qsize())
-    """
-
-
 if __name__ == '__main__':
-        
+
+    """        
     thread=threading.Thread(target=(RunBalancing))
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
@@ -234,11 +243,11 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-    
+    """
     
 
 # For thread
-    """
+    
     thread_1 = threading.Thread(target=Run_KID1)
     thread_3 = threading.Thread(target=Run_KID3)
     thread_5 = threading.Thread(target=Run_KID5)
@@ -262,7 +271,7 @@ if __name__ == '__main__':
     thread_3.start()
     time.sleep(1)
     thread_5.start()
-    """
+    
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(50)

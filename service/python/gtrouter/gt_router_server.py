@@ -36,14 +36,14 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 	CPU_temp=cpu_temp.split(",")
 	SumOfCPUtemp=int(CPU_temp[1])+int(CPU_temp[4])
 	cpu_temp=SumOfCPUtemp/2
-        return GT_balance_pb2.HelloReply(message='This is CPUtemp, %s!', cpu_temp=cpu_temp)
+        return GT_balance_pb2.CPUtempReply(message='This is CPUtemp, %s!', cpu_temp=cpu_temp)
 
     def GetFanRotation (self, request, context):
 	fan_rotation=commands.getoutput("sudo ipmitool -c sdr list | grep Fan")
 	Fan_rotation=fan_rotation.split(",")
 	SumOfFan=float(Fan_rotation[1])+float(Fan_rotation[6])
 	fan_speed=SumOfFan/2
-        return GT_balance_pb2.HelloReply(message="Fan_speed",fan_speed=fan_spped )
+        return GT_balance_pb2.FanReply(message="Fan_speed",fan_speed=fan_speed )
 
     def GetCPUutil (self, request, context):
         # Getting CPU's utilization
