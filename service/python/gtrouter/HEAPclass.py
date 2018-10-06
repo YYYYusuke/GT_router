@@ -25,13 +25,14 @@ class HEAP:
 		for j in (reversed(Cores)):
 		    ReCores.append(j)
 		
-		print("State:", State)
-		print("Cores:", ReCores)
-		
 		for k in range(len(State)):
 		    State[k][0]=ReCores[k]
 		
 		New_state=sorted(State, key=lambda x:x[1])
 		Queue=[New_state[m][0] for m in range(len(New_state))]
+		State=[]
+		Cores=[]
+		Recores=[]	
+		print("Queue", Queue)	
 
 		return Queue

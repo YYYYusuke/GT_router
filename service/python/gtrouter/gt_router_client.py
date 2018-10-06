@@ -27,6 +27,18 @@ Fan_state=[0,0,0,0,0,0]
 
 is_continued=True
 
+def Run_KID(IP_Port, Sever_Num, Queue):
+    while is_continued:
+        # Havin a connection
+        stub=Connect_servers(IP_Port, 'KID'+Server_Num)
+        #stub=Connect_servers('130.207.110.11:111', 'KID1')
+        #stub=Connect_servers('10.20.0.36:50051', 'KID1')
+        # Getting a job from own queue
+        cpu_core=Queue.get()
+        timeout=random.randint(1,5)
+        Process_Request(stub,cpu_core, timeout)
+        time.sleep(1)
+
 def Run_KID1():
     while is_continued:
         # Havin a connection
@@ -34,6 +46,7 @@ def Run_KID1():
         #stub=Connect_servers('130.207.110.11:111', 'KID1')
         #stub=Connect_servers('10.20.0.36:50051', 'KID1')
         # Getting a job from own queue
+	global KID1_Queue
         cpu_core=KID1_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub,cpu_core, timeout)
@@ -46,6 +59,7 @@ def Run_KID3():
         #stub=Connect_servers('130.207.110.13:50052', 'KID3')
         #stub=Connect_servers('10.20.0.37:50052', 'KID3')
         # Getting a job from own queue
+	global KID3_Queue
         cpu_core=KID3_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub, cpu_core, timeout)
@@ -58,6 +72,7 @@ def Run_KID7():
         #stub=Connect_servers('130.207.110.17:50053', 'KID7')
         #stub=Connect_servers('10.20.0.10:50053', 'KID7')
         # Getting a job from own queue
+	global KID7_Queue
         cpu_core=KID7_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub, cpu_core, timeout)
@@ -70,6 +85,7 @@ def Run_KID9():
         #stub=Connect_servers('130.207.110.17:50053', 'KID7')
         #stub=Connect_servers('10.20.0.10:50053', 'KID7')
         # Getting a job from own queue
+	global KID9_Queue
         cpu_core=KID9_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub, cpu_core, timeout)
@@ -82,6 +98,7 @@ def Run_KID11():
         #stub=Connect_servers('130.207.110.17:50053', 'KID7')
         #stub=Connect_servers('10.20.0.10:50053', 'KID7')
         # Getting a job from own queue
+	global KID11_Queue
         cpu_core=KID11_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub, cpu_core, timeout)
@@ -94,11 +111,27 @@ def Run_KID5():
         #stub=Connect_servers('130.207.110.17:50053', 'KID7')
         #stub=Connect_servers('10.20.0.10:50053', 'KID7')
         # Getting a job from own queue
+	global KID5_Queue
         cpu_core=KID5_Queue.get()
         timeout=random.randint(1,5)
         Process_Request(stub, cpu_core, timeout)
         time.sleep(1)
 
+def ListenServeState_KID(IP_Port, Server_Name, state_num):
+    while is_continued:
+        # Havin a connection
+        stub=Connect_servers(IP_Port, Server_Name)
+        #stub=Connect_servers('130.207.110.11:111', 'KID1')
+        #stub=Connect_servers('10.20.0.36:50051', 'KID1')
+        global CPU_util_state
+	global CPU_temp_state
+	global Fan_state
+        CPU_util_state[state_num]=Get_CPUutil(stub)
+	CPU_temp_state[state_num]=Get_CPUtemp(stub)
+	Fan_state[state_num]=Get_FAN(stub)
+        print(CPU_util_state)
+        print(CPU_temp_state)
+        print(Fan_state)
 
 def ListenServeState_KID1():
     while is_continued:
@@ -224,14 +257,6 @@ def QueueTolist(queue):
         Contents.append(tmp)
     return Contents
 
-def heqpsort(iterable):
-    h=[]
-    i=1
-    for value in iterable:
-	heapq.heappush(h, (value, 'KID'+str(i)))
-	i+=2
-    return [heapq.heappop(h) for i in range(len(h))]
-
 def Daemon():
     print("Daemon")
 
@@ -344,6 +369,7 @@ def RunBalancing():
         GetSixCores()
         #RRbin()
 	CPUBased_dynamic()
+	time.sleep(3)
     
 
 if __name__ == '__main__':
