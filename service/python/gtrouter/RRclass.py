@@ -14,10 +14,14 @@ class RR:
         for i in Jobs:
             global Jobs_queue
             Jobs_queue.put(i)
-            #print("Enqueue:%d" %i)
-        #print("All Jobs size is %d" % Jobs_queue.qsize())
-        #print("KID1 queue size is %d" % Kid1_queue.qsize())
         return Jobs_queue
+
+    def Six_Enqueue(self, Jobs):
+        Jobs_queue = Queue()
+        for i in Jobs:
+            Jobs_queue.put(i)
+        return Jobs_queue
+
 
     def Enqueue(self, KID_queue, q):
       if q.empty():
