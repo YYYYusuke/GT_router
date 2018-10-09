@@ -23,10 +23,17 @@ KID7_Queue=Queue()
 KID9_Queue=Queue()
 KID11_Queue=Queue()
 
+# For dynamic
 CPU_util_state=[0,0,0,0,0,0]
 Fan_state=[0,0,0,0,0,0]
 CPU_temp_state=[12,10,11,9,2,3]
 #CPU_temp_state=[0,0,0,0,0,0]
+
+# For static
+Static_CPU_util_state=[1,1,0,0,2,2]
+Static_CPU_temp_state=[1,1,0,0,2,2]
+
+
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 
 is_continued=True
@@ -124,19 +131,37 @@ def ThermalBased_static():
     print("ThermalBased_static")
     hoge=RRclass.RR() # Make an instance
     #ThermalBased
-    while not Balancer_Queue.empty():
-        # Sorting algorithms part
-        # Queueing part	
-    	print("hoge")
+    # Sorting algorithms part
+    hoge=RRclass.RR() # Make an instance
+    global Static_CPU_temp_state
+    global Balancer_Queue
+    cores=QueueTolist(Balancer_Queue)
+    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
+    print("Balancer_queue_before_sorting", cores)
+    heapsort=HEAPclass.HEAP()
+    sortd=heapsort.heap_route(Static_CPU_temp_state, cores )
+    Balancer_Queue=hoge.Six_Enqueue(sortd)
+    print("Balancer_Queue_size_after_sorting=", Balancer_Queue.qsize())
+    # Queueing part
+    RRbin()
 
 def CPUBased_static():
     print("CPUBased_static")
     hoge=RRclass.RR() # Make an instance
     #CPUBased
-    while not Balancer_Queue.empty():
-        # Sorting alogorithm part
-        # Queueing part
-    	print("hoge")
+    # Sorting alogorithm part
+    hoge=RRclass.RR() # Make an instance
+    global Static_CPU_util_state
+    global Balancer_Queue
+    cores=QueueTolist(Balancer_Queue)
+    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
+    print("Balancer_queue_before_sorting", cores)
+    heapsort=HEAPclass.HEAP()
+    sortd=heapsort.heap_route(Static_CPU_util_state, cores )
+    Balancer_Queue=hoge.Six_Enqueue(sortd)
+    print("Balancer_Queue_size_after_sorting=", Balancer_Queue.qsize())
+    # Queueing part
+    RRbin()
 
 def CPUBased_dynamic():
     print("CPUBased_dynamic")
@@ -208,7 +233,8 @@ def RunBalancing():
         GetSixCores()
         #RRbin()
 	#CPUBased_dynamic()
-	ThermalBased_dynamic()
+	#ThermalBased_dynamic()
+	ThermalBased_static()
 	time.sleep(1)
     
 def Daemon(func):
