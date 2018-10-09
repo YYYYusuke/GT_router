@@ -123,39 +123,54 @@ def RRbin():
 def ThermalBased_static():
     print("ThermalBased_static")
     hoge=RRclass.RR() # Make an instance
-    # ThermalBased
+    #ThermalBased
     while not Balancer_Queue.empty():
-        
         # Sorting algorithms part
-        
-        # Queueing part
-        global KID1_Queue
-        global KID3_Queue
-        global KID7_Queue
-        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
-        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
+        # Queueing part	
+    	print("hoge")
 
 def CPUBased_static():
     print("CPUBased_static")
     hoge=RRclass.RR() # Make an instance
-    # CPUBased
+    #CPUBased
     while not Balancer_Queue.empty():
-        
         # Sorting alogorithm part
-        
         # Queueing part
-        global KID1_Queue
-        global KID3_Queue
-        global KID7_Queue
-        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
-        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
+    	print("hoge")
 
 def CPUBased_dynamic():
     print("CPUBased_dynamic")
     hoge=RRclass.RR() # Make an instance
     # Sorting alogorithm part
+    global CPU_util_state
+    global Balancer_Queue
+    cores=QueueTolist(Balancer_Queue)
+    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
+    print("Balancer_queue_before_sorting", cores)
+    heapsort=HEAPclass.HEAP()
+    sortd=heapsort.heap_route(CPU_util_state, cores )
+    Balancer_Queue=hoge.Six_Enqueue(sortd)
+    print("Balancer_Queue_size_after_sorting=", Balancer_Queue.qsize())
+	
+    while not Balancer_Queue.empty():
+        # Queueing part
+        global KID1_Queue
+        global KID3_Queue
+        global KID5_Queue
+        global KID7_Queue
+        global KID9_Queue
+        global KID11_Queue
+        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
+        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
+        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+        KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
+        KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
+        KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
+
+def ThermalBased_dynamic():
+    print("ThermalBased_dynamic")
+    hoge=RRclass.RR() # Make an instance
+    # CPUBased
     global CPU_temp_state
     global Balancer_Queue
     cores=QueueTolist(Balancer_Queue)
@@ -181,23 +196,6 @@ def CPUBased_dynamic():
         KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
 
-def ThermalBased_dynamic():
-    print("ThermalBased_dynamic")
-    hoge=RRclass.RR() # Make an instance
-    hoge.SayHello()
-    # CPUBased
-    while not Balancer_Queue.empty():
-        
-        # Sorting alogorithm part
-	        
-        # Queueing part
-        global KID1_Queue
-        global KID3_Queue
-        global KID7_Queue
-        KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
-        KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
-
 def RunBalancing():
     print("Start !!")
     hoge=RRclass.RR() # Make an instance
@@ -209,7 +207,8 @@ def RunBalancing():
     while is_continued:
         GetSixCores()
         #RRbin()
-	CPUBased_dynamic()
+	#CPUBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
     
 def Daemon(func):
