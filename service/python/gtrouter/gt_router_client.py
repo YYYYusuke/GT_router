@@ -232,15 +232,15 @@ def RunBalancing():
     while is_continued:
         GetSixCores()
         #RRbin()
-	#CPUBased_dynamic()
+	CPUBased_dynamic()
 	#ThermalBased_dynamic()
-	ThermalBased_static()
+	#ThermalBased_static()
 	time.sleep(1)
     
-def Daemon(func):
-    
+def Daemon(func, IP_addr, Server_Name, int_or_queue):
+     
     print("Daemon")
-    thread=threading.Thread(target=func)
+    thread=threading.Thread(target=func, args=(IP_addr, Server_Name, int_or_queue))
     thread.setDaemon(True)
     thread.start()
 
@@ -248,31 +248,34 @@ def Daemon(func):
 if __name__ == '__main__':
     
     print("Start")
-    # Listening state part
+# Listening state part
+    #thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
+    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.11:111', 'KID1', 0))
     """
-    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
     thread_state3 = threading.Thread(target=ListenServeState_KID, args=('localhost:50052', 'KID3', 1))
     thread_state5 = threading.Thread(target=ListenServeState_KID, args=('localhost:50053', 'KID5', 2))
     thread_state7 = threading.Thread(target=ListenServeState_KID, args=('localhost:50054', 'KID7', 3))
     thread_state9 = threading.Thread(target=ListenServeState_KID, args=('localhost:50055', 'KID9', 4))
     thread_state11 = threading.Thread(target=ListenServeState_KID, args=('localhost:50056', 'KID11', 5))
-
+    """
     thread_state1.setDaemon(True)
+    """
     thread_state3.setDaemon(True)
     thread_state5.setDaemon(True)
     thread_state7.setDaemon(True)
     thread_state9.setDaemon(True)
     thread_state11.setDaemon(True)
-    
+    """
     thread_state1.start()
+    """
     thread_state3.start()
     thread_state5.start()
     thread_state7.start()
     thread_state9.start()
     thread_state11.start()
     """
-
 # For Balancing
+    """
     thread=threading.Thread(target=(RunBalancing))
     thread_1 = threading.Thread(target=Run_KID, args=('localhost:50051', 'KID1', KID1_Queue))
     thread_3 = threading.Thread(target=Run_KID, args=('localhost:50052', 'KID3', KID3_Queue))
@@ -302,8 +305,8 @@ if __name__ == '__main__':
     time.sleep(1)
     thread_11.start()
     time.sleep(1)
- 
+    """
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(10)
+    time.sleep(30)
     is_continued=False
     
