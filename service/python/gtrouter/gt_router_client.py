@@ -32,8 +32,6 @@ CPU_temp_state=[0,0,0,0,0,0]
 # For static
 Static_CPU_util_state=[1,1,0,0,2,2]
 Static_CPU_temp_state=[1,1,0,0,2,2]
-
-
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 
 is_continued=True
