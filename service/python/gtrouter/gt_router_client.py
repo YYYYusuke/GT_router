@@ -250,7 +250,7 @@ if __name__ == '__main__':
     print("Start")
 # Listening state part
     #thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
-    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.11:111', 'KID1', 0))
+    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.21:111', 'KID1', 0))
     """
     thread_state3 = threading.Thread(target=ListenServeState_KID, args=('localhost:50052', 'KID3', 1))
     thread_state5 = threading.Thread(target=ListenServeState_KID, args=('localhost:50053', 'KID5', 2))

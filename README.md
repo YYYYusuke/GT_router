@@ -9,6 +9,18 @@ Written by nakajo@west.sd.keio.ac.jp
 ## Dependencies
 - Python 2.7.10
 
+## Setting at KIDs servers
+
+- sudo apt-get clean
+- sudo apt-get update
+- sudo apt-get install python-pip
+- export LC_ALL="en_US.UTF-8"
+- export LC_CTYPE="en_US.UTF-8"
+- sudo dpkg-reconfigure locales
+- pip install --upgrade pip
+- sudo python -m pip install grpcio
+- sudo python -m pip install grpcio-tools googleapis-common-protos
+
 ## References
 
 ## Initiating .proto
