@@ -26,8 +26,8 @@ KID11_Queue=Queue()
 # For dynamic
 CPU_util_state=[0,0,0,0,0,0]
 Fan_state=[0,0,0,0,0,0]
-CPU_temp_state=[12,10,11,9,2,3]
-#CPU_temp_state=[0,0,0,0,0,0]
+CPU_temp_state=[0,0,0,0,0,0]
+#CPU_temp_state=[12,10,11,9,2,3]
 
 # For static
 Static_CPU_util_state=[1,1,0,0,2,2]
@@ -239,7 +239,6 @@ def RunBalancing():
     
 def Daemon(func, IP_addr, Server_Name, int_or_queue):
      
-    print("Daemon")
     thread=threading.Thread(target=func, args=(IP_addr, Server_Name, int_or_queue))
     thread.setDaemon(True)
     thread.start()
@@ -248,42 +247,70 @@ def Daemon(func, IP_addr, Server_Name, int_or_queue):
 if __name__ == '__main__':
     
     print("Start")
-# Listening state part
-    #thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
-    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.21:111', 'KID1', 0))
+    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
+    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
+    Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
+    time.sleep(3)
+    Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
+    time.sleep(1)
+    Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
+    time.sleep(1)
+    Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    
+    thread=threading.Thread(target=(RunBalancing))
+    thread.setDaemon(True)
+    thread.start()
+
     """
+# Listening state part
+    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.11:111', 'KID1', 0))
+    thread_state3 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.13:111', 'KID3', 1))
+    thread_state5 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.1?:111', 'KID5', 2))
+    thread_state7 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.17:111', 'KID7', 3))
+    thread_state9 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.19:111', 'KID9', 4))
+    thread_state11 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.21:111', 'KID11', 5))
+    
+    # For localhost connection
+    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
     thread_state3 = threading.Thread(target=ListenServeState_KID, args=('localhost:50052', 'KID3', 1))
     thread_state5 = threading.Thread(target=ListenServeState_KID, args=('localhost:50053', 'KID5', 2))
     thread_state7 = threading.Thread(target=ListenServeState_KID, args=('localhost:50054', 'KID7', 3))
     thread_state9 = threading.Thread(target=ListenServeState_KID, args=('localhost:50055', 'KID9', 4))
     thread_state11 = threading.Thread(target=ListenServeState_KID, args=('localhost:50056', 'KID11', 5))
-    """
+    
     thread_state1.setDaemon(True)
-    """
     thread_state3.setDaemon(True)
     thread_state5.setDaemon(True)
     thread_state7.setDaemon(True)
     thread_state9.setDaemon(True)
     thread_state11.setDaemon(True)
-    """
+    
     thread_state1.start()
-    """
     thread_state3.start()
     thread_state5.start()
     thread_state7.start()
     thread_state9.start()
     thread_state11.start()
-    """
+    
 # For Balancing
-    """
+  
     thread=threading.Thread(target=(RunBalancing))
+
+    thread_1 = threading.Thread(target=Run_KID, args=('130.207.110.11:111', 'KID1', KID1_Queue))
+    thread_3 = threading.Thread(target=Run_KID, args=('130.207.110.13:111', 'KID3', KID3_Queue))
+    #thread_5 = threading.Thread(target=Run_KID, args=('130.207.110.1?:111', 'KID5', KID5_Queue))
+    thread_7 = threading.Thread(target=Run_KID, args=('130.207.110.17:111', 'KID7', KID7_Queue))
+    thread_9 = threading.Thread(target=Run_KID, args=('130.207.110.19:111', 'KID9', KID9_Queue))
+    thread_11 = threading.Thread(target=Run_KID, args=('130.207.110.21:111', 'KID11', KID11_Queue))
+    
+    # For localhost connection
     thread_1 = threading.Thread(target=Run_KID, args=('localhost:50051', 'KID1', KID1_Queue))
     thread_3 = threading.Thread(target=Run_KID, args=('localhost:50052', 'KID3', KID3_Queue))
     thread_5 = threading.Thread(target=Run_KID, args=('localhost:50053', 'KID5', KID5_Queue))
     thread_7 = threading.Thread(target=Run_KID, args=('localhost:50054', 'KID7', KID7_Queue))
     thread_9 = threading.Thread(target=Run_KID, args=('localhost:50055', 'KID9', KID9_Queue))
     thread_11 = threading.Thread(target=Run_KID, args=('localhost:50056', 'KID11', KID11_Queue))
-
+    
     thread.setDaemon(True)
     thread_1.setDaemon(True)
     thread_3.setDaemon(True)
@@ -306,7 +333,7 @@ if __name__ == '__main__':
     thread_11.start()
     time.sleep(1)
     """
+
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
     is_continued=False
-    

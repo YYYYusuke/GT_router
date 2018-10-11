@@ -17,7 +17,7 @@ Written by nakajo@west.sd.keio.ac.jp
 - export LC_ALL="en_US.UTF-8"
 - export LC_CTYPE="en_US.UTF-8"
 - sudo dpkg-reconfigure locales
-- pip install --upgrade pip
+- apt update (DO NOT use "pip install --upgrade pip" due to the file managing consistency)
 - sudo python -m pip install grpcio
 - sudo python -m pip install grpcio-tools googleapis-common-protos
 
