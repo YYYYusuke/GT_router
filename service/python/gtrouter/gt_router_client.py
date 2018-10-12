@@ -7,12 +7,16 @@ import random
 from Queue import Queue
 import heapq
 import threading
+import csv
+import pandas as pd
 # Myclass_below
 import RRclass
 import HEAPclass
 
 #Jobs=[11,22,13,14,15,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
-Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+#Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+#Jobs = Job_csv_reader("/nethome/ynakajo6/Research/GT_router/Job_data/Jobs_list.csv")
+global Jobs
 
 Balancer_Queue=Queue()
 Jobs_Queue=Queue()
@@ -35,6 +39,12 @@ Static_CPU_temp_state=[1,1,0,0,2,2]
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 
 is_continued=True
+
+def Job_csv_reader(path_w):
+	df=pd.read_csv(path_w, header=None)
+	df=df.T.values.tolist()
+	Jobs_list=df[0]
+	return Jobs_list
 
 def Run_KID(IP_Port, Server_Name, Queue):
     print("Running " + Server_Name + " at IPaddr:" + IP_Port)
@@ -224,6 +234,8 @@ def RunBalancing():
     hoge=RRclass.RR() # Make an instance
     global Jobs_Queue
     global Jobs
+    Jobs=Job_csv_reader("/nethome/ynakajo6/Research/GT_router/Job_data/Jobs_list.csv")
+    print(Jobs)
     Jobs_Queue=hoge.All_Enqueue(Jobs)
     print("All jobs size is %d" % Jobs_Queue.qsize())
     
@@ -291,47 +303,7 @@ if __name__ == '__main__':
     thread_state9.start()
     thread_state11.start()
     
-# For Balancing
-  
-    thread=threading.Thread(target=(RunBalancing))
-
-    thread_1 = threading.Thread(target=Run_KID, args=('130.207.110.11:111', 'KID1', KID1_Queue))
-    thread_3 = threading.Thread(target=Run_KID, args=('130.207.110.13:111', 'KID3', KID3_Queue))
-    #thread_5 = threading.Thread(target=Run_KID, args=('130.207.110.1?:111', 'KID5', KID5_Queue))
-    thread_7 = threading.Thread(target=Run_KID, args=('130.207.110.17:111', 'KID7', KID7_Queue))
-    thread_9 = threading.Thread(target=Run_KID, args=('130.207.110.19:111', 'KID9', KID9_Queue))
-    thread_11 = threading.Thread(target=Run_KID, args=('130.207.110.21:111', 'KID11', KID11_Queue))
-    
-    # For localhost connection
-    thread_1 = threading.Thread(target=Run_KID, args=('localhost:50051', 'KID1', KID1_Queue))
-    thread_3 = threading.Thread(target=Run_KID, args=('localhost:50052', 'KID3', KID3_Queue))
-    thread_5 = threading.Thread(target=Run_KID, args=('localhost:50053', 'KID5', KID5_Queue))
-    thread_7 = threading.Thread(target=Run_KID, args=('localhost:50054', 'KID7', KID7_Queue))
-    thread_9 = threading.Thread(target=Run_KID, args=('localhost:50055', 'KID9', KID9_Queue))
-    thread_11 = threading.Thread(target=Run_KID, args=('localhost:50056', 'KID11', KID11_Queue))
-    
-    thread.setDaemon(True)
-    thread_1.setDaemon(True)
-    thread_3.setDaemon(True)
-    thread_5.setDaemon(True)
-    thread_7.setDaemon(True)
-    thread_9.setDaemon(True)
-    thread_11.setDaemon(True)
-
-    thread.start()
-    thread_1.start()
-    time.sleep(1)
-    thread_3.start()
-    time.sleep(1)
-    thread_5.start()
-    time.sleep(1)
-    thread_7.start()
-    time.sleep(1)
-    thread_9.start()
-    time.sleep(1)
-    thread_11.start()
-    time.sleep(1)
-    """
+    """ 
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
@@ -339,5 +311,5 @@ if __name__ == '__main__':
   
     t2= time.time()
     elapsed_time = t2 - t1
-    print(f"ElapsedTime:{elapsed_time}")
+    print(elapsed_time)
     print("End")
