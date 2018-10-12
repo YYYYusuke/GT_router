@@ -4,6 +4,7 @@ import psutil
 import commands
 import time
 import os
+from threading import Thread
 from datetime import datetime
 
 """
@@ -12,7 +13,10 @@ Dynamic load balancing is based on uptime and IPMItool command. However this scr
 via Psutil command as well.
 """
 
-path_w = os.getcwd()
+#path_w = os.getcwd()
+path_w = '/nethome/ynakajo6/Research/GT_router/tool/Recorder'
+is_continued = True
+
 
 def GetCPUtemp():
 	cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")
@@ -58,12 +62,19 @@ def GetPSutil():
 
 	return PS
 
-
-if __name__ == '__main__':
-	print("Start recording server's state")
-	
-	for i in range(10):
+def RecordingLoop():
+	while is_continued:
 		GetCPUtemp()
 		GetFanRotation()
 		GetPSutil()
 		GetCPUutil()
+
+if __name__ == '__main__':
+	print("Start recording server's state")
+		
+	thread = Thread(target=RecordingLoop)
+	thread.start()
+	time.sleep(10)
+	is_continued = False
+	
+	print("Done recording server's state")
