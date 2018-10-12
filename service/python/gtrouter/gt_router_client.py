@@ -235,12 +235,12 @@ def RunBalancing():
     global Jobs_Queue
     global Jobs
     Jobs=Job_csv_reader("/nethome/ynakajo6/Research/GT_router/Job_data/Jobs_list.csv")
-    print(Jobs)
     Jobs_Queue=hoge.All_Enqueue(Jobs)
     print("All jobs size is %d" % Jobs_Queue.qsize())
     
     while is_continued:
         GetSixCores()
+	time.sleep(6)
         #RRbin()
 	CPUBased_dynamic()
 	#ThermalBased_dynamic()
@@ -258,29 +258,28 @@ if __name__ == '__main__':
     
     print("Start")
     t1 = time.time()
-    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
-    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
+    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
+    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
     time.sleep(3)
-    Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
+    Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
     time.sleep(1)
-    Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()
 
     """
-# Listening state part
+    # Listening state part
     thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.11:111', 'KID1', 0))
     thread_state3 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.13:111', 'KID3', 1))
     thread_state5 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.1?:111', 'KID5', 2))
     thread_state7 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.17:111', 'KID7', 3))
     thread_state9 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.19:111', 'KID9', 4))
     thread_state11 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.21:111', 'KID11', 5))
-    
     # For localhost connection
     thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
     thread_state3 = threading.Thread(target=ListenServeState_KID, args=('localhost:50052', 'KID3', 1))
@@ -288,20 +287,6 @@ if __name__ == '__main__':
     thread_state7 = threading.Thread(target=ListenServeState_KID, args=('localhost:50054', 'KID7', 3))
     thread_state9 = threading.Thread(target=ListenServeState_KID, args=('localhost:50055', 'KID9', 4))
     thread_state11 = threading.Thread(target=ListenServeState_KID, args=('localhost:50056', 'KID11', 5))
-    
-    thread_state1.setDaemon(True)
-    thread_state3.setDaemon(True)
-    thread_state5.setDaemon(True)
-    thread_state7.setDaemon(True)
-    thread_state9.setDaemon(True)
-    thread_state11.setDaemon(True)
-    
-    thread_state1.start()
-    thread_state3.start()
-    thread_state5.start()
-    thread_state7.start()
-    thread_state9.start()
-    thread_state11.start()
     
     """ 
 

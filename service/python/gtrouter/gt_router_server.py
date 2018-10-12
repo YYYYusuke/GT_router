@@ -73,7 +73,7 @@ def serve():
 def serve_based_addr(addr, port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     GT_balance_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    addr_with_port = addr + ':' + str(port)
+    addr_with_port = '130.207.110.' + addr + ':' + str(port)
     server.add_insecure_port(addr_with_port)
     server.start()
     try:
@@ -83,7 +83,6 @@ def serve_based_addr(addr, port):
         server.stop(0)
 
 if __name__ == '__main__':
-    #serve()
     args =sys.argv
     print(args[1], args[2])
     serve_based_addr(args[1], args[2])
