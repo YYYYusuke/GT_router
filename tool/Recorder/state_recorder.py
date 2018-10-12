@@ -71,10 +71,24 @@ def RecordingLoop():
 
 if __name__ == '__main__':
 	print("Start recording server's state")
-		
+	try:
+		os.remove(path_w+"/PStest.csv")
+	except:
+		print("PStest is already deleted")
+	try:
+		os.remove(path_w+"/CPU_util_test.csv")
+	except:
+		print("CPU_util is already deleted")
+	try:
+		os.remove(path_w+"/FANtest.csv")
+	except:
+		print("FAN is already deleted")
+	try:
+		os.remove(path_w+"/CPU_temp_test.csv")
+	except:
+		print("CPU_Temp is already deleted")
 	thread = Thread(target=RecordingLoop)
 	thread.start()
 	time.sleep(10)
 	is_continued = False
-	
 	print("Done recording server's state")
