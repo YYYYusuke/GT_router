@@ -21,7 +21,8 @@ def GetCPUtemp():
 	cpu_temp=SumOfCPUtemp/2
 	
 	with open(path_w + '/CPU_temp_test.csv', mode='a') as f:
-		f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
+		#f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
+		f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
 
 	return cpu_temp
 
@@ -32,7 +33,8 @@ def GetFanRotation():
 	fan_speed=SumOfFan/2
 
 	with open(path_w + '/FANtest.csv', mode='a') as f:
-		f.write(str(datetime.now().microsecond) + ',' + str(fan_speed) +'\n')
+		#f.write(str(datetime.now().microsecond) + ',' + str(fan_speed) +'\n')
+		f.write(str(time.time()) + ',' + str(fan_speed) +'\n')
 
 	return fan_speed
 
@@ -43,14 +45,16 @@ def GetCPUutil():
 	cpu_util=float(LoadAvg[0])
 
 	with open(path_w + '/CPU_util_test.csv', mode='a') as f:
-		f.write(str(datetime.now().microsecond) + ',' + str(cpu_util) +'\n')
+		#f.write(str(datetime.now().microsecond) + ',' + str(cpu_util) +'\n')
+		f.write(str(time.time()) + ',' + str(cpu_util) +'\n')
 	return cpu_util
 
 def GetPSutil():
 	PS=psutil.cpu_percent(interval=1)
 
 	with open(path_w + '/PStest.csv', mode='a') as f:
-		f.write(str(datetime.now().microsecond) + ',' + str(PS) +'\n')
+		#f.write(str(datetime.now().microsecond) + ',' + str(PS) +'\n')
+		f.write(str(time.time()) + ',' + str(PS) +'\n')
 
 	return PS
 

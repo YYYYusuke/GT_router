@@ -245,6 +245,7 @@ def Daemon(func, IP_addr, Server_Name, int_or_queue):
 if __name__ == '__main__':
     
     print("Start")
+    t1 = time.time()
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
@@ -335,3 +336,8 @@ if __name__ == '__main__':
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
     is_continued=False
+  
+    t2= time.time()
+    elapsed_time = t2 - t1
+    print(f"ElapsedTime:{elapsed_time}")
+    print("End")
