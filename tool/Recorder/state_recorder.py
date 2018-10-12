@@ -14,7 +14,7 @@ via Psutil command as well.
 """
 
 #path_w = os.getcwd()
-path_w = '/nethome/ynakajo6/Research/GT_router/tool/Recorder'
+path_w = '/nethome/ynakajo6/GT_router/tool/Recorder'
 is_continued = True
 
 
