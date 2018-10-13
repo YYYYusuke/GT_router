@@ -15,7 +15,6 @@ import HEAPclass
 
 #Jobs=[11,22,13,14,15,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 #Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
-#Jobs = Job_csv_reader("/nethome/ynakajo6/Research/GT_router/Job_data/Jobs_list.csv")
 global Jobs
 
 Balancer_Queue=Queue()
@@ -39,6 +38,8 @@ Static_CPU_temp_state=[1,1,0,0,2,2]
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 
 is_continued=True
+Algorithm_time=[]
+
 
 def Job_csv_reader(path_w):
 	df=pd.read_csv(path_w, header=None)
@@ -234,18 +235,26 @@ def RunBalancing():
     hoge=RRclass.RR() # Make an instance
     global Jobs_Queue
     global Jobs
-    Jobs=Job_csv_reader("/nethome/ynakajo6/Research/GT_router/Job_data/Jobs_list.csv")
+    global Algorithm_time
+    Jobs=Job_csv_reader("/nethome/ynakajo6/GT_router/Job_data/Jobs_list.csv")
     Jobs_Queue=hoge.All_Enqueue(Jobs)
     print("All jobs size is %d" % Jobs_Queue.qsize())
     
     while is_continued:
+	t_algo1=time.time()
+
         GetSixCores()
 	time.sleep(6)
-        #RRbin()
-	CPUBased_dynamic()
+        RRbin()
+	#CPUBased_dynamic()
 	#ThermalBased_dynamic()
 	#ThermalBased_static()
 	time.sleep(1)
+	
+	t_algo2=time.time()
+	elapsed_algo = t_algo2 - t_algo1
+	Algorithm_time.append(elapsed_algo)
+	
     
 def Daemon(func, IP_addr, Server_Name, int_or_queue):
      
@@ -257,12 +266,13 @@ def Daemon(func, IP_addr, Server_Name, int_or_queue):
 if __name__ == '__main__':
     
     print("Start")
-    t1 = time.time()
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
+    Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 4)
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
     time.sleep(3)
-    Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    #Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
     time.sleep(1)
@@ -293,8 +303,7 @@ if __name__ == '__main__':
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
     is_continued=False
-  
-    t2= time.time()
-    elapsed_time = t2 - t1
-    print(elapsed_time)
+
+    print("Algorithm_time: ", Algorithm_time)
+
     print("End")

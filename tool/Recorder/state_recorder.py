@@ -62,12 +62,21 @@ def GetPSutil():
 
 	return PS
 
-def RecordingLoop():
+def GetCPUtempLoop():
 	while is_continued:
 		GetCPUtemp()
+
+def GetFanLoop():
+	while is_continued:
 		GetFanRotation()
-		GetPSutil()
+
+def GetCPUutilLoop():
+	while is_continued:
 		GetCPUutil()
+
+def GetPSLoop():
+	while is_continued:
+		GetPSutil()
 
 if __name__ == '__main__':
 	print("Start recording server's state")
@@ -87,8 +96,16 @@ if __name__ == '__main__':
 		os.remove(path_w+"/CPU_temp_test.csv")
 	except:
 		print("CPU_Temp is already deleted")
-	thread = Thread(target=RecordingLoop)
+
+	thread = Thread(target=GetCPUtempLoop)
 	thread.start()
+	thread = Thread(target=GetFanLoop)
+	thread.start()
+	thread = Thread(target=GetCPUutilLoop)
+	thread.start()
+	thread = Thread(target=GetPSLoop)
+	thread.start()
+
 	time.sleep(10)
 	is_continued = False
 	print("Done recording server's state")
