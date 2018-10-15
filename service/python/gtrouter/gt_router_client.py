@@ -277,6 +277,12 @@ def GetCputilLoop():
 	fuga.GetCPUutil()
 	time.sleep(1)
 
+def GetPSLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetPSutil()
+	time.sleep(1)
+
 def Daemon(func, IP_addr, Server_Name, int_or_queue):
      
     thread=threading.Thread(target=func, args=(IP_addr, Server_Name, int_or_queue))
