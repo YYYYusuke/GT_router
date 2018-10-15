@@ -32,10 +32,22 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
+	"""
         cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")
 	CPU_temp=cpu_temp.split(",")
 	SumOfCPUtemp=int(CPU_temp[1])+int(CPU_temp[4])
 	cpu_temp=SumOfCPUtemp/2
+	"""
+	core_temp=commands.getoutput("sensors | grep Core")
+	tmp=re.split('[()]', core_temp)
+	Hoge=[]
+
+	for i in range(0, len(tmp)-1, 2):
+		A=re.split('[+C]', tmp[i])
+		Hoge.append(float(A[2]))
+
+	cpu_temp=sum(Hoge)/len(Hoge)
+
         return GT_balance_pb2.CPUtempReply(message='This is CPUtemp, %s!', cpu_temp=cpu_temp)
 
     def GetFanRotation (self, request, context):
