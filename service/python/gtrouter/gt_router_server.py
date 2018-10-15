@@ -10,9 +10,11 @@ import GT_balance_pb2
 import GT_balance_pb2_grpc
 import re
 import threading
+import RecordClass
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
+path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
@@ -96,7 +98,6 @@ def serve_based_addr(addr, port):
 	is_continued=False
 
 def GetSensorsLoop():
-    print("hello")
     fuga=RecordClass.Record()
     while is_continued:
 	fuga.GetSensors()
@@ -123,14 +124,38 @@ def GetPSLoop():
 def RecordDaemon(func):
     thread=threading.Thread(target=func)
     thread.setDaemon(True)
+    thread.start()
 
 if __name__ == '__main__':
-    
+    print("Cleaning old files.....")
+
+    try:
+	os.remove(path_w+"/PStest.csv")
+    except:
+	print("PS file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_temp_test.csv")
+    except:
+	print("CPU_temp file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_temp_sensorstest.csv")
+    except:
+	print("Sensors file is already deleted.")
+    try:
+	os.remove(path_w+"/FANtest.csv")
+    except:
+	print("FAN file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_util_test.csv")
+    except:
+	print("CPU util file is already deleted.")
+
+
+    print("Opening server.....") 
     RecordDaemon(GetSensorsLoop)
     RecordDaemon(GetFANLoop)
     RecordDaemon(GetCputilLoop)
     RecordDaemon(GetPSLoop)
-
     args =sys.argv
     print(args[1], args[2])
     serve_based_addr(args[1], args[2])

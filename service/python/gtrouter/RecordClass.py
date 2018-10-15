@@ -18,27 +18,6 @@ class Record:
 
 		self.path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
 
-		try:
-			os.remove(self.path_w+"/PStest.csv")
-		except:
-			print("PStest is already deleted")
-		try:
-			os.remove(self.path_w+"/CPU_temp_test.csv")
-		except:
-			print("CPU_temp_test is already deleted")
-		try:
-			os.remove(self.path_w+"/CPU_temp_sensorstest.csv")
-		except:
-			print("Sensors test is already deleted")
-		try:
-			os.remove(self.path_w+"/FANtest.csv")
-		except:
-			print("FANtest is already deleted")
-		try:
-			os.remove(self.path_w+"/CPU_util_test.csv")
-		except:
-			print("CPUutiltest is already deleted")
-
 	def GetCPUtemp(self):
 		cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")
 		CPU_temp=cpu_temp.split(",")
