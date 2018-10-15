@@ -16,7 +16,7 @@ via Psutil command as well.
 class Record:
 	def __init__(self):
 
-		self.path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
+		self.path_w='/nethome/ynakajo6/GT_router/logs'
 
 	def GetCPUtemp(self):
 		cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")

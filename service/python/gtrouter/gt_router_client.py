@@ -40,7 +40,7 @@ Static_CPU_util_state=[1,1,0,0,2,2]
 Static_CPU_temp_state=[1,1,0,0,2,2]
 
 is_continued=True
-path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
+path_w='/nethome/ynakajo6/GT_router/logs'
 Algorithm_time=[]
 
 
