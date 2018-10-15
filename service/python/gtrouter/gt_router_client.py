@@ -12,6 +12,8 @@ import pandas as pd
 # Myclass_below
 import RRclass
 import HEAPclass
+import RecordClass 
+
 
 #Jobs=[11,22,13,14,15,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 #Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
@@ -245,11 +247,11 @@ def RunBalancing():
 
         GetSixCores()
 	time.sleep(6)
-        RRbin()
+        #RRbin()
 	#ThermalBased_static()
 
 	#CPUBased_dynamic()
-	#ThermalBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
@@ -280,33 +282,22 @@ if __name__ == '__main__':
     Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
+
+    fuga=RecordClass.Record()
+    #thread_fuga=threading.Thread(target=fuga.GetSensorsLoop, args=is_continued)
+    thread_fuga=threading.Thread(target=fuga.GetSensors)
+    thread_fuga.setDaemon(True)
+    thread_fuga.start()
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()
 
-    """
-    # Listening state part
-    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.11:111', 'KID1', 0))
-    thread_state3 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.13:111', 'KID3', 1))
-    thread_state5 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.1?:111', 'KID5', 2))
-    thread_state7 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.17:111', 'KID7', 3))
-    thread_state9 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.19:111', 'KID9', 4))
-    thread_state11 = threading.Thread(target=ListenServeState_KID, args=('130.207.110.21:111', 'KID11', 5))
-    # For localhost connection
-    thread_state1 = threading.Thread(target=ListenServeState_KID, args=('localhost:50051', 'KID1', 0))
-    thread_state3 = threading.Thread(target=ListenServeState_KID, args=('localhost:50052', 'KID3', 1))
-    thread_state5 = threading.Thread(target=ListenServeState_KID, args=('localhost:50053', 'KID5', 2))
-    thread_state7 = threading.Thread(target=ListenServeState_KID, args=('localhost:50054', 'KID7', 3))
-    thread_state9 = threading.Thread(target=ListenServeState_KID, args=('localhost:50055', 'KID9', 4))
-    thread_state11 = threading.Thread(target=ListenServeState_KID, args=('localhost:50056', 'KID11', 5))
-    
-    """ 
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
     is_continued=False
 
-    print("Algorithm_time: ", Algorithm_time)
+    print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))
 
     print("End")
