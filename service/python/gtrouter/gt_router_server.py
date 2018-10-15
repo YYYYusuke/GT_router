@@ -118,7 +118,7 @@ def GetPSLoop():
 	fuga.GetPSutil()
 	time.sleep(1)
 
-def RecordDaemon(func)
+def RecordDaemon(func):
     thread=threading.Thread(target=func)
     thread.setDaemon(True)
 
