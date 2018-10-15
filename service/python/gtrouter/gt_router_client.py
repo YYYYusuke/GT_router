@@ -35,9 +35,9 @@ CPU_temp_state=[0,0,0,0,0,0]
 #CPU_temp_state=[12,10,11,9,2,3]
 
 # For static
+#KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 Static_CPU_util_state=[1,1,0,0,2,2]
 Static_CPU_temp_state=[1,1,0,0,2,2]
-#KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
 
 is_continued=True
 Algorithm_time=[]
@@ -258,13 +258,34 @@ def RunBalancing():
 	elapsed_algo = t_algo2 - t_algo1
 	Algorithm_time.append(elapsed_algo)
 	
-    
+def GetSensorsLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetSensors()
+	time.sleep(1)
+
+def GetFANLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetFanRotation()
+	time.sleep(1)
+
+def GetCputilLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetCPUutil()
+	time.sleep(1)
+
 def Daemon(func, IP_addr, Server_Name, int_or_queue):
      
     thread=threading.Thread(target=func, args=(IP_addr, Server_Name, int_or_queue))
     thread.setDaemon(True)
     thread.start()
 
+def RecordDaemon(func):
+
+    thread.setDaemon(True)
+    thread.start()
 
 if __name__ == '__main__':
     
@@ -283,11 +304,17 @@ if __name__ == '__main__':
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
 
-    fuga=RecordClass.Record()
-    #thread_fuga=threading.Thread(target=fuga.GetSensorsLoop, args=is_continued)
-    thread_fuga=threading.Thread(target=fuga.GetSensors)
-    thread_fuga.setDaemon(True)
-    thread_fuga.start()
+    thread_CPUtemp=threading.Thread(target=GetSensorsLoop)
+    thread_CPUtemp.setDaemon(True)
+    thread_CPUtemp.start()
+    
+    thread_FAN=threading.Thread(target=GetFANLoop)
+    thread_FAN.setDaemon(True)
+    thread_FAN.start()
+
+    thread_Cputil=threading.Thread(target=GetCputilLoop)
+    thread_Cputil.setDaemon(True)
+    thread_Cputil.start()
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
