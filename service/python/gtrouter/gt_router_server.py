@@ -14,7 +14,7 @@ import RecordClass
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
-path_w='/nethome/ynakajo6/GT_router/logs'
+path_w='/nethome/ynakajo6/local_logs'
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
