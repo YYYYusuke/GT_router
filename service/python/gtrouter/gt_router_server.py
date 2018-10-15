@@ -96,6 +96,7 @@ def serve_based_addr(addr, port):
 	is_continued=False
 
 def GetSensorsLoop():
+    print("hello")
     fuga=RecordClass.Record()
     while is_continued:
 	fuga.GetSensors()
