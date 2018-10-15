@@ -40,6 +40,7 @@ Static_CPU_util_state=[1,1,0,0,2,2]
 Static_CPU_temp_state=[1,1,0,0,2,2]
 
 is_continued=True
+path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
 Algorithm_time=[]
 
 
@@ -283,12 +284,34 @@ def Daemon(func, IP_addr, Server_Name, int_or_queue):
     thread.start()
 
 def RecordDaemon(func):
-
+    thread=threading.Thread(target=func)
     thread.setDaemon(True)
     thread.start()
 
 if __name__ == '__main__':
-    
+    print("Cleaning old files.....")
+
+    try:
+	os.remove(path_w+"/PStest.csv")
+    except:
+	print("PS file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_temp_test.csv")
+    except:
+	print("CPU_temp file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_temp_sensorstest.csv")
+    except:
+	print("Sensors file is already deleted.")
+    try:
+	os.remove(path_w+"/FANtest.csv")
+    except:
+	print("FAN file is already deleted.")
+    try:
+	os.remove(path_w+"/CPU_util_test.csv")
+    except:
+	print("CPU util file is already deleted.") 
+
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
@@ -304,22 +327,14 @@ if __name__ == '__main__':
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
 
-    thread_CPUtemp=threading.Thread(target=GetSensorsLoop)
-    thread_CPUtemp.setDaemon(True)
-    thread_CPUtemp.start()
-    
-    thread_FAN=threading.Thread(target=GetFANLoop)
-    thread_FAN.setDaemon(True)
-    thread_FAN.start()
-
-    thread_Cputil=threading.Thread(target=GetCputilLoop)
-    thread_Cputil.setDaemon(True)
-    thread_Cputil.start()
+    RecordDaemon(GetSensorsLoop)
+    RecordDaemon(GetCputilLoop)
+    RecordDaemon(GetFANLoop)
+    RecordDaemon(GetPSLoop)
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()
-
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(30)
