@@ -8,6 +8,7 @@ import random
 import commands
 import GT_balance_pb2
 import GT_balance_pb2_grpc
+import re
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
