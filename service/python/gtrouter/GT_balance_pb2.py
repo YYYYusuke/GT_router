@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='gtrouter',
   syntax='proto3',
   serialized_options=_b('\n\031io.grpc.examples.gtrouterB\rGtRouterProtoP\001\242\002\003GTR'),
-  serialized_pb=_b('\n\x10GT_balance.proto\x12\x08gtrouter\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"3\n\x10\x43PU_coresRequest\x12\x11\n\tcpu_cores\x18\x01 \x01(\x05\x12\x0c\n\x04time\x18\x02 \x01(\x05\"-\n\x0bServerReply\x12\x0e\n\x06mess_1\x18\x01 \x01(\t\x12\x0e\n\x06mess_2\x18\x02 \x01(\t\"1\n\x0c\x43PUutilReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08\x63pu_util\x18\x02 \x01(\x02\"1\n\x0c\x43PUtempReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08\x63pu_temp\x18\x02 \x01(\x05\".\n\x08\x46\x61nReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x11\n\tfan_speed\x18\x02 \x01(\x02\x32\x8f\x03\n\x07Greeter\x12:\n\x08SayHello\x12\x16.gtrouter.HelloRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12?\n\rSayHelloAgain\x12\x16.gtrouter.HelloRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12G\n\x11\x43PUProcessRequest\x12\x1a.gtrouter.CPU_coresRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12>\n\nGetCPUtemp\x12\x16.gtrouter.HelloRequest\x1a\x16.gtrouter.CPUtempReply\"\x00\x12>\n\x0eGetFanRotation\x12\x16.gtrouter.HelloRequest\x1a\x12.gtrouter.FanReply\"\x00\x12>\n\nGetCPUutil\x12\x16.gtrouter.HelloRequest\x1a\x16.gtrouter.CPUutilReply\"\x00\x42\x32\n\x19io.grpc.examples.gtrouterB\rGtRouterProtoP\x01\xa2\x02\x03GTRb\x06proto3')
+  serialized_pb=_b('\n\x10GT_balance.proto\x12\x08gtrouter\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\"3\n\x10\x43PU_coresRequest\x12\x11\n\tcpu_cores\x18\x01 \x01(\x05\x12\x0c\n\x04time\x18\x02 \x01(\x05\"-\n\x0bServerReply\x12\x0e\n\x06mess_1\x18\x01 \x01(\t\x12\x0e\n\x06mess_2\x18\x02 \x01(\t\"1\n\x0c\x43PUutilReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08\x63pu_util\x18\x02 \x01(\x02\"1\n\x0c\x43PUtempReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x10\n\x08\x63pu_temp\x18\x02 \x01(\x02\".\n\x08\x46\x61nReply\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x11\n\tfan_speed\x18\x02 \x01(\x02\x32\x8f\x03\n\x07Greeter\x12:\n\x08SayHello\x12\x16.gtrouter.HelloRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12?\n\rSayHelloAgain\x12\x16.gtrouter.HelloRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12G\n\x11\x43PUProcessRequest\x12\x1a.gtrouter.CPU_coresRequest\x1a\x14.gtrouter.HelloReply\"\x00\x12>\n\nGetCPUtemp\x12\x16.gtrouter.HelloRequest\x1a\x16.gtrouter.CPUtempReply\"\x00\x12>\n\x0eGetFanRotation\x12\x16.gtrouter.HelloRequest\x1a\x12.gtrouter.FanReply\"\x00\x12>\n\nGetCPUutil\x12\x16.gtrouter.HelloRequest\x1a\x16.gtrouter.CPUutilReply\"\x00\x42\x32\n\x19io.grpc.examples.gtrouterB\rGtRouterProtoP\x01\xa2\x02\x03GTRb\x06proto3')
 )
 
 
@@ -217,8 +217,8 @@ _CPUTEMPREPLY = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='cpu_temp', full_name='gtrouter.CPUtempReply.cpu_temp', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),

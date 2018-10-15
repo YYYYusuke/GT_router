@@ -50,7 +50,7 @@ message CPUutilReply{
 
 message CPUtempReply{
   string message = 1;
-  int32  cpu_temp = 2;
+  float  cpu_temp = 2;
 }
 
 message FanReply{
