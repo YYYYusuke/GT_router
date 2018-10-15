@@ -17,6 +17,7 @@ class Record:
 	def __init__(self):
 
 		self.path_w='/nethome/ynakajo6/GT_router/tool/Recorder'
+
 		try:
 			os.remove(self.path_w+"/PStest.csv")
 		except:

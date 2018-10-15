@@ -11,6 +11,7 @@ import GT_balance_pb2_grpc
 import re
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
+is_continued = True
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
@@ -25,9 +26,6 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         num_cpu=request.cpu_cores
         timeout=request.time
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
-        
-        #stress cores on CPU ex) stress --cpu 15 --timeout 30s
-        #os.system("stress --cpu " + str(num_cpu) + "--timeout " + "1s")
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
         
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
@@ -59,7 +57,6 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.FanReply(message="Fan_speed",fan_speed=fan_speed )
 
     def GetCPUutil (self, request, context):
-        # Getting CPU's utilization
         MSG_from_Client="THis is cpu usage within 1 min"
 	uptime=commands.getoutput("uptime")
 	Load_avg=uptime.split(":")
@@ -78,6 +75,7 @@ def serve():
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+	is_continued=False
 
     """
     Start gRPC server based on given addr adn port number
@@ -94,8 +92,43 @@ def serve_based_addr(addr, port):
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+	is_continued=False
+
+def GetSensorsLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetSensors()
+	time.sleep(1)
+	
+def GetFANLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetFanRotation()
+	time.sleep(1)
+
+def GetCputilLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetCPUutil()
+	time.sleep(1)
+
+def GetPSLoop():
+    fuga=RecordClass.Record()
+    while is_continued:
+	fuga.GetPSutil()
+	time.sleep(1)
+
+def RecordDaemon(func)
+    thread=threading.Thread(target=func)
+    thread.setDaemon(True)
 
 if __name__ == '__main__':
+    
+    RecordDaemon(GetSensorsLoop)
+    RecordDaemon(GetFANLoop)
+    RecordDaemon(GetCputilLoop)
+    RecordDaemon(GetPSLoop)
+
     args =sys.argv
     print(args[1], args[2])
     serve_based_addr(args[1], args[2])
