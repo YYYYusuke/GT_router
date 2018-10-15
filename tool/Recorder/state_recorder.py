@@ -80,6 +80,7 @@ def GetPSLoop():
 
 if __name__ == '__main__':
 	print("Start recording server's state")
+
 	try:
 		os.remove(path_w+"/PStest.csv")
 	except:
@@ -106,6 +107,6 @@ if __name__ == '__main__':
 	thread = Thread(target=GetPSLoop)
 	thread.start()
 
-	time.sleep(10)
+	time.sleep(30)
 	is_continued = False
 	print("Done recording server's state")

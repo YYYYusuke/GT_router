@@ -245,10 +245,11 @@ def RunBalancing():
 
         GetSixCores()
 	time.sleep(6)
-        RRbin()
-	#CPUBased_dynamic()
-	#ThermalBased_dynamic()
+        #RRbin()
 	#ThermalBased_static()
+
+	CPUBased_dynamic()
+	#ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
@@ -271,7 +272,9 @@ if __name__ == '__main__':
     Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 4)
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
     time.sleep(3)
-    #Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+
+    Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    time.sleep(1)
     Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
