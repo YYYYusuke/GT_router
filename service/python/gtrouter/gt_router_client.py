@@ -295,7 +295,7 @@ def RecordDaemon(func):
 
 if __name__ == '__main__':
     print("Cleaning old files.....")
-    """
+    
     try:
 	os.remove(path_w+"/PStest.csv")
     except:
@@ -316,15 +316,18 @@ if __name__ == '__main__':
 	os.remove(path_w+"/CPU_util_test.csv")
     except:
 	print("CPU util file is already deleted.") 
-    """
+    
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
+    Daemon(ListenServeState_KID, '130.207.110.13:111', 'KID3', 1)
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
     Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 4)
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
-    time.sleep(3)
+    time.sleep(1)
 
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
+    time.sleep(1)
+    Daemon(Run_KID, 'localhost:111', 'KID3', KID3_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
     time.sleep(1)
@@ -333,9 +336,13 @@ if __name__ == '__main__':
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
 
     RecordDaemon(GetSensorsLoop)
+    time.sleep(1)
     RecordDaemon(GetCputilLoop)
+    time.sleep(1)
     RecordDaemon(GetFANLoop)
+    time.sleep(1)
     RecordDaemon(GetPSLoop)
+    time.sleep(1)
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)

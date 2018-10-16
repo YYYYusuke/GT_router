@@ -87,7 +87,8 @@ def serve():
 def serve_based_addr(addr, port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     GT_balance_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    addr_with_port = '130.207.110.' + addr + ':' + str(port)
+    #addr_with_port = '130.207.110.' + addr + ':' + str(port)
+    addr_with_port = addr + ':' + str(port)
     server.add_insecure_port(addr_with_port)
     server.start()
     try:
@@ -128,7 +129,6 @@ def RecordDaemon(func):
 
 if __name__ == '__main__':
     print("Cleaning old files.....")
-    """
     try:
 	os.remove(path_w+"/PStest.csv")
     except:
@@ -148,14 +148,17 @@ if __name__ == '__main__':
     try:
 	os.remove(path_w+"/CPU_util_test.csv")
     except:
-	print("CPU util file is already deleted.")
-    """
+	print("CPU util file is already deleted.") 
 
-    print("Opening server.....") 
+    print("StartRecording.....")
     RecordDaemon(GetSensorsLoop)
+    time.sleep(1)
     RecordDaemon(GetFANLoop)
+    time.sleep(1)
     RecordDaemon(GetCputilLoop)
+    time.sleep(1)
     RecordDaemon(GetPSLoop)
+    print("Opening server.....") 
     args =sys.argv
     print(args[1], args[2])
     serve_based_addr(args[1], args[2])
