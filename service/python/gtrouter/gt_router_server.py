@@ -128,7 +128,7 @@ def RecordDaemon(func):
 
 if __name__ == '__main__':
     print("Cleaning old files.....")
-
+    """
     try:
 	os.remove(path_w+"/PStest.csv")
     except:
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 	os.remove(path_w+"/CPU_util_test.csv")
     except:
 	print("CPU util file is already deleted.")
-
+    """
 
     print("Opening server.....") 
     RecordDaemon(GetSensorsLoop)

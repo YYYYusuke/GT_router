@@ -24,7 +24,7 @@ class Record:
 		SumOfCPUtemp=int(CPU_temp[1])+int(CPU_temp[4])
 		cpu_temp=SumOfCPUtemp/2
 		
-		with open(self.path_w + '/CPU_temp_test.csv', mode='a') as f:
+		with open(self.path_w + '/CPU_temp_test.csv', mode='w') as f:
 			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
 			f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
 		return cpu_temp
@@ -38,7 +38,7 @@ class Record:
 			Hoge.append(float(A[2]))
 		cpu_temp=sum(Hoge)/len(Hoge)
 
-		with open(self.path_w + '/CPU_temp_sensorstest.csv', mode='a') as f:
+		with open(self.path_w + '/CPU_temp_sensorstest.csv', mode='w') as f:
 			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
 			f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
 		return cpu_temp
@@ -50,7 +50,7 @@ class Record:
 		SumOfFan=float(Fan_rotation[1])+float(Fan_rotation[6])
 		fan_speed=SumOfFan/2
 
-		with open(self.path_w + '/FANtest.csv', mode='a') as f:
+		with open(self.path_w + '/FANtest.csv', mode='w') as f:
 			#f.write(str(datetime.now().microsecond) + ',' + str(fan_speed) +'\n')
 			f.write(str(time.time()) + ',' + str(fan_speed) +'\n')
 		return fan_speed
@@ -61,7 +61,7 @@ class Record:
 		LoadAvg=Load_avg[-1].split(",")
 		cpu_util=float(LoadAvg[0])
 
-		with open(self.path_w + '/CPU_util_test.csv', mode='a') as f:
+		with open(self.path_w + '/CPU_util_test.csv', mode='w') as f:
 			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_util) +'\n')
 			f.write(str(time.time()) + ',' + str(cpu_util) +'\n')
 		return cpu_util
@@ -69,7 +69,7 @@ class Record:
 	def GetPSutil(self):
 		PS=psutil.cpu_percent(interval=1)
 
-		with open(self.path_w + '/PStest.csv', mode='a') as f:
+		with open(self.path_w + '/PStest.csv', mode='w') as f:
 			#f.write(str(datetime.now().microsecond) + ',' + str(PS) +'\n')
 			f.write(str(time.time()) + ',' + str(PS) +'\n')
 		return PS

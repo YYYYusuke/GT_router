@@ -247,7 +247,6 @@ def RunBalancing():
 	t_algo1=time.time()
 
         GetSixCores()
-	time.sleep(6)
         #RRbin()
 	#ThermalBased_static()
 
@@ -296,7 +295,7 @@ def RecordDaemon(func):
 
 if __name__ == '__main__':
     print("Cleaning old files.....")
-
+    """
     try:
 	os.remove(path_w+"/PStest.csv")
     except:
@@ -317,7 +316,7 @@ if __name__ == '__main__':
 	os.remove(path_w+"/CPU_util_test.csv")
     except:
 	print("CPU util file is already deleted.") 
-
+    """
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
@@ -343,9 +342,13 @@ if __name__ == '__main__':
     thread.start()
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(30)
+    time.sleep(10)
     is_continued=False
 
     print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))
+    with open(path_w+'/algo_time.csv', mode='w') as f:
+	writer=csv.writer(f, lineterminator='\n')
+	for val in Algorithm_time:
+		writer.writerow([val]) 
 
     print("End")
