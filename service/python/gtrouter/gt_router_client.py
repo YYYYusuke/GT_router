@@ -319,7 +319,7 @@ if __name__ == '__main__':
     
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
-    Daemon(ListenServeState_KID, '130.207.110.13:111', 'KID3', 1)
+    Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
     Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
     Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 4)
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
