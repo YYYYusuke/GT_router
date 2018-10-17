@@ -297,25 +297,9 @@ if __name__ == '__main__':
     print("Cleaning old files.....")
     
     try:
-	os.remove(path_w+"/PStest.csv")
+	os.remove(path_w+"/algo_time.csv")
     except:
-	print("PS file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_temp_test.csv")
-    except:
-	print("CPU_temp file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_temp_sensorstest.csv")
-    except:
-	print("Sensors file is already deleted.")
-    try:
-	os.remove(path_w+"/FANtest.csv")
-    except:
-	print("FAN file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_util_test.csv")
-    except:
-	print("CPU util file is already deleted.") 
+	print("Algorithm_Time file is already deleted.")
     
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
