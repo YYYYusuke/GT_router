@@ -248,9 +248,9 @@ def RunBalancing():
 
         GetSixCores()
         #RRbin()
-	#ThermalBased_static()
+	ThermalBased_static()
 
-	CPUBased_dynamic()
+	#CPUBased_dynamic()
 	#ThermalBased_dynamic()
 	time.sleep(1)
 	
