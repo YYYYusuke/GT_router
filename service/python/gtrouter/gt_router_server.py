@@ -61,13 +61,14 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.FanReply(message="Fan_speed",fan_speed=fan_speed )
 
     def GetCPUutil (self, request, context):
+	
 	"""
-        MSG_from_Client="THis is cpu usage within 1 min"
 	uptime=commands.getoutput("uptime")
 	Load_avg=uptime.split(":")
 	LoadAvg=Load_avg[-1].split(",")
         cpu_util=float(LoadAvg[0]) 
 	"""
+        MSG_from_Client="THis is cpu usage within 1 min"
 	cpu_util=psutil.cpu_percent(interval=1)
 
 	return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=cpu_util)
