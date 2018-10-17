@@ -250,8 +250,8 @@ def RunBalancing():
         #RRbin()
 	#ThermalBased_static()
 
-	#CPUBased_dynamic()
-	ThermalBased_dynamic()
+	CPUBased_dynamic()
+	#ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
@@ -333,7 +333,7 @@ if __name__ == '__main__':
     thread.start()
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(10)
+    time.sleep(300)
     is_continued=False
 
     print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))
