@@ -3,6 +3,7 @@ import grpc
 import GT_balance_pb2
 import GT_balance_pb2_grpc
 import time
+import datetime
 import random
 from Queue import Queue
 import heapq
@@ -248,10 +249,10 @@ def RunBalancing():
 
         GetSixCores()
         #RRbin()
-	ThermalBased_static()
+	#ThermalBased_static()
 
 	#CPUBased_dynamic()
-	#ThermalBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
@@ -319,14 +320,6 @@ if __name__ == '__main__':
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
 
-    RecordDaemon(GetSensorsLoop)
-    time.sleep(1)
-    RecordDaemon(GetCputilLoop)
-    time.sleep(1)
-    RecordDaemon(GetFANLoop)
-    time.sleep(1)
-    RecordDaemon(GetPSLoop)
-    time.sleep(1)
     
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
