@@ -45,8 +45,8 @@ path_w='/nethome/ynakajo6/local_logs'
 Algorithm_time=[]
 
 
-def Job_csv_reader(path_w):
-	df=pd.read_csv(path_w, header=None)
+def Job_csv_reader(path):
+	df=pd.read_csv(path, header=None)
 	df=df.T.values.tolist()
 	Jobs_list=df[0]
 	return Jobs_list
@@ -58,7 +58,8 @@ def Run_KID(IP_Port, Server_Name, Queue):
         stub=Connect_servers(IP_Port, Server_Name)
         # Getting a job from own queue
         cpu_core=Queue.get()
-        timeout=random.randint(1,5)
+        #timeout=random.randint(1,5)
+	timeout=1
         Process_Request(stub,cpu_core, timeout)
         time.sleep(1)
 
@@ -248,11 +249,11 @@ def RunBalancing():
 	t_algo1=time.time()
 
         GetSixCores()
-        #RRbin()
+        RRbin()
 	#ThermalBased_static()
 
 	#CPUBased_dynamic()
-	ThermalBased_dynamic()
+	#ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
