@@ -249,11 +249,11 @@ def RunBalancing():
 	t_algo1=time.time()
 
         GetSixCores()
-        RRbin()
+        #RRbin()
 	#ThermalBased_static()
 
 	#CPUBased_dynamic()
-	#ThermalBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()

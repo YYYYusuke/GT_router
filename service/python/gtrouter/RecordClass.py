@@ -25,8 +25,8 @@ class Record:
 		cpu_temp=SumOfCPUtemp/2
 		
 		with open(self.path_w + '/CPU_temp_test.csv', mode='a') as f:
-			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
-			f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
+			f.write(str(datetime.now()) + ',' + str(cpu_temp) +'\n')
+			#f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
 		return cpu_temp
 
 	def GetSensors(self):
@@ -39,8 +39,8 @@ class Record:
 		cpu_temp=sum(Hoge)/len(Hoge)
 
 		with open(self.path_w + '/CPU_temp_sensorstest.csv', mode='a') as f:
-			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_temp) +'\n')
-			f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
+			f.write(str(datetime.now()) + ',' + str(cpu_temp) +'\n')
+			#f.write(str(time.time()) + ',' + str(cpu_temp) +'\n')
 		return cpu_temp
 	
 
@@ -51,8 +51,8 @@ class Record:
 		fan_speed=SumOfFan/2
 
 		with open(self.path_w + '/FANtest.csv', mode='a') as f:
-			#f.write(str(datetime.now().microsecond) + ',' + str(fan_speed) +'\n')
-			f.write(str(time.time()) + ',' + str(fan_speed) +'\n')
+			f.write(str(datetime.now()) + ',' + str(fan_speed) +'\n')
+			#f.write(str(time.time()) + ',' + str(fan_speed) +'\n')
 		return fan_speed
 
 	def GetCPUutil(self):
@@ -62,16 +62,16 @@ class Record:
 		cpu_util=float(LoadAvg[0])
 
 		with open(self.path_w + '/CPU_util_test.csv', mode='a') as f:
-			#f.write(str(datetime.now().microsecond) + ',' + str(cpu_util) +'\n')
-			f.write(str(time.time()) + ',' + str(cpu_util) +'\n')
+			f.write(str(datetime.now()) + ',' + str(cpu_util) +'\n')
+			#f.write(str(time.time()) + ',' + str(cpu_util) +'\n')
 		return cpu_util
 
 	def GetPSutil(self):
 		PS=psutil.cpu_percent(interval=1)
 
 		with open(self.path_w + '/PStest.csv', mode='a') as f:
-			#f.write(str(datetime.now().microsecond) + ',' + str(PS) +'\n')
-			f.write(str(time.time()) + ',' + str(PS) +'\n')
+			f.write(str(datetime.now()) + ',' + str(PS) +'\n')
+			#f.write(str(time.time()) + ',' + str(PS) +'\n')
 		return PS
 
 	def GetCPUtempLoop(self, is_continued):
