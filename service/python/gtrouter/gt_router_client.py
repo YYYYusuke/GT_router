@@ -11,6 +11,7 @@ import threading
 import csv
 import pandas as pd # Myclass_below import RRclass
 import HEAPclass
+import RRclass
 import RecordClass 
 
 
@@ -250,8 +251,8 @@ def RunBalancing():
         #RRbin()
 	#ThermalBased_static()
 
-	CPUBased_dynamic()
-	#ThermalBased_dynamic()
+	#CPUBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
