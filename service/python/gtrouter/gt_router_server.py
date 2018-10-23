@@ -135,37 +135,42 @@ def RecordDaemon(func):
     thread.start()
 
 if __name__ == '__main__':
-    print("Cleaning old files.....")
-    try:
-	os.remove(path_w+"/PStest.csv")
-    except:
-	print("PS file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_temp_test.csv")
-    except:
-	print("CPU_temp file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_temp_sensorstest.csv")
-    except:
-	print("Sensors file is already deleted.")
-    try:
-	os.remove(path_w+"/FANtest.csv")
-    except:
-	print("FAN file is already deleted.")
-    try:
-	os.remove(path_w+"/CPU_util_test.csv")
-    except:
-	print("CPU util file is already deleted.") 
-
-    print("StartRecording.....")
-    RecordDaemon(GetSensorsLoop)
-    time.sleep(1)
-    RecordDaemon(GetFANLoop)
-    time.sleep(1)
-    RecordDaemon(GetCputilLoop)
-    time.sleep(1)
-    RecordDaemon(GetPSLoop)
-    print("Opening server.....") 
     args =sys.argv
-    print(args[1], args[2])
+    print(args[1], args[2], args[3])
+    
+    if args[3]=='Record':
+	    print("Cleaning old files.....")
+	    try:
+		os.remove(path_w+"/PStest.csv")
+	    except:
+		print("PS file is already deleted.")
+	    try:
+		os.remove(path_w+"/CPU_temp_test.csv")
+	    except:
+		print("CPU_temp file is already deleted.")
+	    try:
+		os.remove(path_w+"/CPU_temp_sensorstest.csv")
+	    except:
+		print("Sensors file is already deleted.")
+	    try:
+		os.remove(path_w+"/FANtest.csv")
+	    except:
+		print("FAN file is already deleted.")
+	    try:
+		os.remove(path_w+"/CPU_util_test.csv")
+	    except:
+		print("CPU util file is already deleted.") 
+	    
+	    print("StartRecording.....")
+	    RecordDaemon(GetSensorsLoop)
+	    time.sleep(1)
+	    RecordDaemon(GetFANLoop)
+	    time.sleep(1)
+	    RecordDaemon(GetCputilLoop)
+	    time.sleep(1)
+	    RecordDaemon(GetPSLoop)
+    else:
+	    pass
+
+    print("Opening server.....") 
     serve_based_addr(args[1], args[2])

@@ -75,15 +75,15 @@ def Run_KID_TWOPorts(IP, Server_Name, Queue):
     PortB=':112'
     while is_continued:
         # Havin two connections
-        stub=Connect_servers(IP+PortA, Server_Name)
-        stub=Connect_servers(IP+PortB, Server_Name)
+        stub_A=Connect_servers(IP+PortA, Server_Name)
+        stub_B=Connect_servers(IP+PortB, Server_Name)
         # Getting jobs from own queue
         cpu_core_portA=Queue.get()
         cpu_core_portB=Queue.get()
         #timeout=random.randint(1,5)
-	timeout=1
-        Process_Request(stub, cpu_core_portA, timeout)
-        Process_Request(stub, cpu_core_portB, timeout)
+	timeout=5
+        Daemon(Process_Request, stub_A, cpu_core_portA, timeout)
+        Daemon(Process_Request, stub_B, cpu_core_portB, timeout)
         time.sleep(1)
     
 def ListenServeState_KID(IP_Port, Server_Name, state_num):
@@ -331,18 +331,30 @@ if __name__ == '__main__':
     Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 3)
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 4) 
     time.sleep(1)
-
+    
+    """
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
     time.sleep(1)
     Daemon(Run_KID, 'localhost:111', 'KID3', KID3_Queue)
     time.sleep(1)
-    Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
-    time.sleep(1)
     Daemon(Run_KID, '130.207.110.17:111', 'KID7', KID7_Queue)
     time.sleep(1)
+    Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
+    time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
-
+    """
     
+    Daemon(Run_KID_TWOPorts, '130.207.110.11', 'KID1', KID1_Queue)
+    time.sleep(1)
+    Daemon(Run_KID_TWOPorts, 'localhost', 'KID3', KID3_Queue)
+    time.sleep(1)
+    Daemon(Run_KID_TWOPorts, '130.207.110.17', 'KID7', KID7_Queue)
+    time.sleep(1)
+    Daemon(Run_KID_TWOPorts, '130.207.110.19', 'KID9', KID9_Queue)
+    time.sleep(1)
+    Daemon(Run_KID_TWOPorts, '130.207.110.21', 'KID11', KID11_Queue)
+    time.sleep(1)
+
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()
