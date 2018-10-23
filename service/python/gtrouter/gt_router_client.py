@@ -29,10 +29,17 @@ KID9_Queue=Queue()
 KID11_Queue=Queue()
 
 # For dynamic
+"""
+#For six queue
 CPU_util_state=[0,0,0,0,0,0]
 Fan_state=[0,0,0,0,0,0]
 CPU_temp_state=[0,0,0,0,0,0]
-#CPU_temp_state=[12,10,11,9,2,3]
+"""
+#For five queue
+CPU_util_state=[0,0,0,0,0]
+Fan_state=[0,0,0,0,0]
+CPU_temp_state=[0,0,0,0,0]
+
 
 # For static
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
@@ -59,9 +66,25 @@ def Run_KID(IP_Port, Server_Name, Queue):
         cpu_core=Queue.get()
         #timeout=random.randint(1,5)
 	timeout=1
-        Process_Request(stub,cpu_core, timeout)
+        Process_Request(stub, cpu_core, timeout)
         time.sleep(1)
 
+def Run_KID_TWOPorts(IP, Server_Name, Queue):
+    print("Running " + Server_Name + " at IPaddr:" + IP)
+    PortA=':111'
+    PortB=':112'
+    while is_continued:
+        # Havin two connections
+        stub=Connect_servers(IP+PortA, Server_Name)
+        stub=Connect_servers(IP+PortB, Server_Name)
+        # Getting jobs from own queue
+        cpu_core_portA=Queue.get()
+        cpu_core_portB=Queue.get()
+        #timeout=random.randint(1,5)
+	timeout=1
+        Process_Request(stub, cpu_core_portA, timeout)
+        Process_Request(stub, cpu_core_portB, timeout)
+        time.sleep(1)
     
 def ListenServeState_KID(IP_Port, Server_Name, state_num):
     print("Listen Server state of " + Server_Name + ". IPaddr:" + IP_Port)
@@ -83,7 +106,6 @@ def Connect_servers(server_addr_port, server_name):
     channel = grpc.insecure_channel(server_addr_port)
     stub = GT_balance_pb2_grpc.GreeterStub(channel)
     response = stub.SayHello(GT_balance_pb2.HelloRequest(name=server_name))
-    #print("Load_Balancer recieved:" + response.message)
     return stub
 
 def Get_CPUutil(stub):
@@ -103,15 +125,15 @@ def Process_Request(stub, CPUCORES, TIME):
     #print("Response: " + response.message)
     return response
 
-def GetSixCores():
+def GetFiveCores():
     hoge=RRclass.RR() # Make an instance
     i=0
-    while i < 6:
+    while i < 5:
         global Balancer_Queue
         global Jobs_Queue
         Balancer_Queue=hoge.Enqueue_TO_KID(Balancer_Queue, Jobs_Queue)
         i+=1
-    print("Captured six cores at Load balancer")
+    print("Captured five cores at Load balancer")
 
 def QueueTolist(queue):
     Contents=[]
@@ -129,13 +151,13 @@ def RRbin():
     while not Balancer_Queue.empty():
         global KID1_Queue
         global KID3_Queue
-        global KID5_Queue
+        #global KID5_Queue
         global KID7_Queue
         global KID9_Queue
         global KID11_Queue
         KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+        #KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
         KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
         KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
@@ -194,13 +216,13 @@ def CPUBased_dynamic():
         # Queueing part
         global KID1_Queue
         global KID3_Queue
-        global KID5_Queue
+        #global KID5_Queue
         global KID7_Queue
         global KID9_Queue
         global KID11_Queue
         KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+        #KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
         KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
         KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
@@ -223,13 +245,13 @@ def ThermalBased_dynamic():
         # Queueing part
         global KID1_Queue
         global KID3_Queue
-        global KID5_Queue
+        #global KID5_Queue
         global KID7_Queue
         global KID9_Queue
         global KID11_Queue
         KID1_Queue=hoge.Enqueue_TO_KID(KID1_Queue, Balancer_Queue)
         KID3_Queue=hoge.Enqueue_TO_KID(KID3_Queue, Balancer_Queue)
-        KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
+        #KID5_Queue=hoge.Enqueue_TO_KID(KID5_Queue, Balancer_Queue)
         KID7_Queue=hoge.Enqueue_TO_KID(KID7_Queue, Balancer_Queue)
         KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
@@ -247,7 +269,7 @@ def RunBalancing():
     while is_continued:
 	t_algo1=time.time()
 
-        GetSixCores()
+        GetFiveCores()
         #RRbin()
 	#ThermalBased_static()
 
@@ -305,9 +327,9 @@ if __name__ == '__main__':
     print("Start")
     Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
     Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
-    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 3)
-    Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 4)
-    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 5) 
+    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 2)
+    Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 3)
+    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 4) 
     time.sleep(1)
 
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
