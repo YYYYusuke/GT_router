@@ -334,6 +334,7 @@ if __name__ == '__main__':
     
     
     # ONE PORT CONNECTION
+    """
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
     time.sleep(1)
     Daemon(Run_KID, 'localhost:111', 'KID3', KID3_Queue)
@@ -343,7 +344,6 @@ if __name__ == '__main__':
     Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
-    
     """
     # TWO PORT CONNECTION
     Daemon(Run_KID_TWOPorts, '130.207.110.11', 'KID1', KID1_Queue)
@@ -356,7 +356,7 @@ if __name__ == '__main__':
     time.sleep(1)
     Daemon(Run_KID_TWOPorts, '130.207.110.21', 'KID11', KID11_Queue)
     time.sleep(1)
-    """
+    
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()

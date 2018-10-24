@@ -5,6 +5,7 @@ import subprocess
 import grpc
 import os
 import sys
+import csv
 import random
 import commands
 import GT_balance_pb2
@@ -21,6 +22,7 @@ import multiprocessing as multi
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
 path_w='/nethome/ynakajo6/local_logs'
+ServerProcessTime=[]
 
 class Process:
     
@@ -58,8 +60,9 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
 	load=ProcessClass.Process()
-	load.SayHello()
-	load.usemulti(num_cpu, 50)	
+	elapsed_time=load.usemulti(num_cpu, 50)	
+	global ServerProcessTime
+	ServerProcessTime.append(elapsed_time)
 	
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
@@ -121,6 +124,12 @@ def serve_based_addr(addr, port):
     except KeyboardInterrupt:
         server.stop(0)
 	is_continued=False
+	print("Average_Server_Process_time", sum(ServerProcessTime)/len(ServerProcessTime))
+	with open(path_w+'/serve_time.csv', mode='w') as f:
+		writer=csv.writer(f, lineterminator='\n')
+		for val in ServerProcessTime:
+			writer.writerow([val]) 
+	print("End")
 
 def GetSensorsLoop():
     fuga=RecordClass.Record()

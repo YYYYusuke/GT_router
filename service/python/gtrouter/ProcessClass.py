@@ -27,4 +27,4 @@ class Process:
 	    print("Processing with "+ str(job) +" cores is Done")
 	    elapsed=time.time() -s
 	    print('time: {0} [sec]'.format(elapsed))
-	    return result
+	    return elapsed
