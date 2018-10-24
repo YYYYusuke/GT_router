@@ -54,13 +54,14 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
         num_cpu=request.cpu_cores
         timeout=request.time
+	job_intensity=request.cpu_cores * 10
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
         """
-        print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
+        print("Required CPU core is %d cores" %num_cpu, "Job intensity is %d " %job_intensity)
 	load=ProcessClass.Process()
-	elapsed_time=load.usemulti(num_cpu, 50)	
+	elapsed_time=load.usemulti(num_cpu, job_intensity) #Parallel processing with requried cores 	
 	global ServerProcessTime
 	ServerProcessTime.append(elapsed_time)
 	

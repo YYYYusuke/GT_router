@@ -19,12 +19,12 @@ class Process:
 	def f(self, x):
 	    return x*x
 
-	def usemulti(self, job, num):
+	def usemulti(self, required_cores, job_intensity):
 	    s=time.time()
-	    p=MyPool(multi.cpu_count() if job < 0 else job)
-	    result=p.map(self.process, range(num))
+	    p=MyPool(multi.cpu_count() if required_cores < 0 else required_cores)
+	    result=p.map(self.process, range(job_intensity))
 	    #p.close()
-	    print("Processing with "+ str(job) +" cores is Done")
+	    print("Processing with "+ str(required_cores) +" cores is Done")
 	    elapsed=time.time() -s
 	    print('time: {0} [sec]'.format(elapsed))
 	    return elapsed
