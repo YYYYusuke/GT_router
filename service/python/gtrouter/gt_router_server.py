@@ -12,11 +12,33 @@ import GT_balance_pb2_grpc
 import re
 import threading
 import RecordClass
+import ProcessClass
 import psutil
+from multiprocessing import Pool
+import multiprocessing as multi
+
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
 path_w='/nethome/ynakajo6/local_logs'
+
+class Process:
+    
+    def __init__(self):
+	pass
+    
+    def SayHello(self):
+	print("Hello from Process class!!")
+
+    def process(self, i):
+	return [{'id':j, 'sum': sum(range(i*j))} for j in range(500)]
+
+    def usemulti(self, job, num):
+	p=Pool(multi.cpu_count() if job<0 else job)
+	result=p.map(self.process, range(num))
+	p.close()
+	print("Processing with" + str(job) + " cores is done")
+	return result
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
@@ -30,12 +52,19 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
         num_cpu=request.cpu_cores
         timeout=request.time
+        """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
-        
+        """
+        print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
+	load=ProcessClass.Process()
+	load.SayHello()
+	load.usemulti(num_cpu, 50)	
+	
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
+
 	"""
         cpu_temp=commands.getoutput("sudo ipmitool -c sdr list | grep CPU")
 	CPU_temp=cpu_temp.split(",")
@@ -74,18 +103,6 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
 	return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=cpu_util)
 
-
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    GT_balance_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
-    try:
-        while True:
-            time.sleep(_ONE_DAY_IN_SECONDS)
-    except KeyboardInterrupt:
-        server.stop(0)
-	is_continued=False
 
     """
     Start gRPC server based on given addr adn port number
