@@ -3,7 +3,7 @@
 from multiprocessing import Process, Pipe
 
 class MyPool:
-    proc_num = 8
+    proc_num = 24
 
     def __init__(self, proc_num):
         self.proc_num = proc_num

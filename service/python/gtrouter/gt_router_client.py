@@ -270,10 +270,10 @@ def RunBalancing():
 	t_algo1=time.time()
 
         GetFiveCores()
-        RRbin()
+        #RRbin()
 	#ThermalBased_static()
 
-	#CPUBased_dynamic()
+	CPUBased_dynamic()
 	#ThermalBased_dynamic()
 	time.sleep(1)
 	
