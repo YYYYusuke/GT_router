@@ -49,7 +49,7 @@ Static_CPU_temp_state=[1,1,0,0,2,2]
 is_continued=True
 path_w='/nethome/ynakajo6/local_logs'
 Algorithm_time=[]
-
+E_time=[]
 
 def Job_csv_reader(path):
 	df=pd.read_csv(path, header=None)
@@ -94,8 +94,12 @@ def ListenServeState_KID(IP_Port, Server_Name, state_num):
         global CPU_util_state
 	global CPU_temp_state
 	global Fan_state
+	global E_time
         CPU_util_state[state_num]=Get_CPUutil(stub)
+	nowi=time.time()
 	CPU_temp_state[state_num]=Get_CPUtemp(stub)
+	elapsed_CPUutil=time.time()-nowi
+	E_time.append(elapsed_CPUutil)
 	Fan_state[state_num]=Get_FAN(stub)
         print("CPU_utilization: ",  CPU_util_state)
         print("CPU_Temperature: ", CPU_temp_state)
@@ -332,7 +336,6 @@ if __name__ == '__main__':
     Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 4) 
     time.sleep(1)
     
-    
     # ONE PORT CONNECTION
     """
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
@@ -362,7 +365,7 @@ if __name__ == '__main__':
     thread.start()
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(300)
+    time.sleep(30)
     is_continued=False
 
     print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))
@@ -370,5 +373,6 @@ if __name__ == '__main__':
 	writer=csv.writer(f, lineterminator='\n')
 	for val in Algorithm_time:
 		writer.writerow([val]) 
+    print("UpdatingCPUutil_time: ", sum(E_time)/len(E_time))
 
     print("End")
