@@ -35,7 +35,8 @@ class Record:
 		Hoge=[]
 		for i in range(0, len(tmp)-1, 2):
 			A=re.split('[+C]', tmp[i])
-			Hoge.append(float(A[2]))
+			B=float(filter(str.isdigit, A[2])
+			Hoge.append(B/10))
 		cpu_temp=sum(Hoge)/len(Hoge)
 
 		with open(self.path_w + '/CPU_temp_sensorstest.csv', mode='a') as f:
