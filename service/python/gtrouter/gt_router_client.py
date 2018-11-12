@@ -277,8 +277,8 @@ def RunBalancing():
         #RRbin()
 	#ThermalBased_static()
 
-	CPUBased_dynamic()
-	#ThermalBased_dynamic()
+	#CPUBased_dynamic()
+	ThermalBased_dynamic()
 	time.sleep(1)
 	
 	t_algo2=time.time()
