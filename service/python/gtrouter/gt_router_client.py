@@ -95,12 +95,12 @@ def ListenServeState_KID(IP_Port, Server_Name, state_num):
 	global CPU_temp_state
 	global Fan_state
 	global E_time
-        CPU_util_state[state_num]=Get_CPUutil(stub)
 	nowi=time.time()
+        CPU_util_state[state_num]=Get_CPUutil(stub)
 	CPU_temp_state[state_num]=Get_CPUtemp(stub)
+	Fan_state[state_num]=Get_FAN(stub)
 	elapsed_CPUutil=time.time()-nowi
 	E_time.append(elapsed_CPUutil)
-	Fan_state[state_num]=Get_FAN(stub)
         print("CPU_utilization: ",  CPU_util_state)
         print("CPU_Temperature: ", CPU_temp_state)
         print("Local Fan Rotation speed:", Fan_state)
@@ -274,10 +274,10 @@ def RunBalancing():
 	t_algo1=time.time()
 
         GetFiveCores()
-       	RRbin()
+       	#RRbin()
 	#ThermalBased_static()
 
-	#CPUBased_dynamic()
+	CPUBased_dynamic()
 	#ThermalBased_dynamic()
 	time.sleep(1)
 	
@@ -373,6 +373,6 @@ if __name__ == '__main__':
 	writer=csv.writer(f, lineterminator='\n')
 	for val in Algorithm_time:
 		writer.writerow([val]) 
-    print("UpdatingCPUutil_time: ", sum(E_time)/len(E_time))
+    print("Listneing_time: ", sum(E_time)/len(E_time))
 
     print("End")
