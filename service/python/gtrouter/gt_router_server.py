@@ -54,7 +54,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
         num_cpu=request.cpu_cores
         timeout=request.time
-	job_intensity=request.cpu_cores * 5
+	job_intensity=request.cpu_cores * 10
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
