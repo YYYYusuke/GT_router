@@ -365,7 +365,7 @@ if __name__ == '__main__':
     thread.start()
 
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
-    time.sleep(300)
+    time.sleep(60)
     is_continued=False
 
     print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))

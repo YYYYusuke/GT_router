@@ -51,10 +51,13 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         return GT_balance_pb2.HelloReply(message='Hello again, %s!' % request.name)
 
     def CPUProcessRequest(self, request, context):
-	global intensity
         num_cpu=request.cpu_cores
         timeout=request.time
-	job_intensity=request.cpu_cores * intensity
+	
+	args=sys.argv
+	intensity = args[4]
+	job_intensity=request.cpu_cores * int(intensity)
+	
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
@@ -172,6 +175,7 @@ if __name__ == '__main__':
     print("Intensity:", args[4])
     global intensity
     intensity=args[4]
+
     if args[3]=='Record':
 	    print("Cleaning old files.....")
 	    try:
