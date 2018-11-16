@@ -18,7 +18,6 @@ import psutil
 from multiprocessing import Pool
 import multiprocessing as multi
 
-
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
 path_w='/nethome/ynakajo6/local_logs'
@@ -56,7 +55,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 	
 	args=sys.argv
 	intensity = args[4]
-	job_intensity=request.cpu_cores * int(intensity)
+	job_intensity=request.cpu_cores * float(intensity)
 	
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
