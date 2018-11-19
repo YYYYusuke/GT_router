@@ -54,9 +54,9 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
         timeout=request.time
 	
 	args=sys.argv
-	intensity = args[4]
-	job_intensity=request.cpu_cores * float(intensity)
-	
+	intensity=args[4]
+	#assert intensity==10.5, "Intensity type error"
+	job_intensity=request.cpu_cores * int(intensity)
         """
         print("Processed_cpu is %d cores" %num_cpu, "Processed_time is %d ms" %timeout)
         os.system("stress --cpu " + str(num_cpu) + " --timeout " + str(timeout) + "s")
@@ -172,6 +172,7 @@ if __name__ == '__main__':
     args =sys.argv
     print(args[1], args[2], args[3], args[4])
     print("Intensity:", args[4])
+    print("Intensity_type:", type(float(args[4])))
     global intensity
     intensity=args[4]
 
