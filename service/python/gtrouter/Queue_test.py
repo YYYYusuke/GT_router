@@ -1,4 +1,5 @@
 from Queue import Queue
+import copy
 
 # For static round robin balancing
 
@@ -23,29 +24,12 @@ def Enqueue(KID_queue, q):
     KID_queue=q.get()
     print(KID_queue)
 
-def Enqueue_TO_KID1(q):
+def Enqueue_TO_KID(Kid_queue, q):
   if q.empty():
     print("Empty")
   else:
-    global Kid1_queue
     tmp=q.get()
-    Kid1_queue.put(tmp)
-
-def Enqueue_TO_KID3(q):
-  if q.empty():
-    print("Empty")
-  else:
-    global Kid3_queue
-    tmp=q.get()
-    Kid3_queue.put(tmp)
-
-def Enqueue_TO_KID5(q):
-  if q.empty():
-    print("Empty")
-  else:
-    global Kid5_queue
-    tmp=q.get()
-    Kid5_queue.put(tmp)
+    Kid_queue.put(tmp)
 
 def Dequeue(q):
   if q.empty():
@@ -58,23 +42,19 @@ def Dequeue(q):
 
 def Contents_confir(queue):
     Contents=[]
+    queue_copy=Queue()
+    queue_copy.queue=copy.deepcopy(queue.queue)
     for i in range(queue.qsize()):
-        tmp=queue.get()
+        tmp=queue_copy.get()
         Contents.append(tmp)
     return Contents
 
-def RR():
+def Test():
   while not Jobs_queue.empty():
 
-    Enqueue_TO_KID1(Jobs_queue)
-    Enqueue_TO_KID3(Jobs_queue)
-    Enqueue_TO_KID5(Jobs_queue)
-  
-  """
-    Enqueue(Kid1_queue, Jobs_queue)
-    Enqueue(Kid2_queue, Jobs_queue)
-    Enqueue(Kid3_queue, Jobs_queue)
-  """
+    Enqueue_TO_KID(Kid1_queue, Jobs_queue)
+    Enqueue_TO_KID(Kid3_queue, Jobs_queue)
+    Enqueue_TO_KID(Kid5_queue, Jobs_queue)
 
 if __name__ == '__main__':
   
@@ -84,17 +64,17 @@ if __name__ == '__main__':
   print("ALL Jobs size is %d" % Jobs_queue.qsize())
   print("KID1 queue size is %d" % Kid1_queue.qsize())
   
-  print("---------")
+  print("---------------------------------------------------")
  
-  RR()
+  Test()
 
   print("KID1 queue size is %d" % Kid1_queue.qsize())
   print("KID3 queue size is %d" % Kid3_queue.qsize())
   print("KID5 queue size is %d" % Kid5_queue.qsize())
   
-  print("KID1's contents are ", Contents_confir(Kid1_queue))
-  print("KID3's contents are ", Contents_confir(Kid3_queue))
-  print("KID5's contents are ", Contents_confir(Kid5_queue))
-
-
+  global queue_monitor 
+  print([Contents_confir(Kid1_queue), Contents_confir(Kid3_queue), Contents_confir(Kid5_queue)])
+  print("KID1 queue size is %d" % Kid1_queue.qsize())
+  print("KID3 queue size is %d" % Kid3_queue.qsize())
+  print("KID5 queue size is %d" % Kid5_queue.qsize())
 

@@ -21,25 +21,7 @@ import multiprocessing as multi
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
 path_w='/nethome/ynakajo6/local_logs'
-ServerProcessTime=[]
-
-class Process:
-    
-    def __init__(self):
-	pass
-    
-    def SayHello(self):
-	print("Hello from Process class!!")
-
-    def process(self, i):
-	return [{'id':j, 'sum': sum(range(i*j))} for j in range(500)]
-
-    def usemulti(self, job, num):
-	p=Pool(multi.cpu_count() if job<0 else job)
-	result=p.map(self.process, range(num))
-	p.close()
-	print("Processing with" + str(job) + " cores is done")
-	return result
+ServerProcessTime=[[], []]
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
@@ -65,8 +47,8 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 	load=ProcessClass.Process()
 	elapsed_time=load.usemulti(num_cpu, job_intensity) #Parallel processing with requried cores 	
 	global ServerProcessTime
-	ServerProcessTime.append(elapsed_time)
-	
+	ServerProcessTime[0].append(elapsed_time)
+	ServerProcessTime[1].append(job_intensity)
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
@@ -87,7 +69,6 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 		Hoge.append(B/10)
 
 	cpu_temp=sum(Hoge)/len(Hoge)
-
         return GT_balance_pb2.CPUtempReply(message='This is CPUtemp, %s!', cpu_temp=cpu_temp)
 
     def GetFanRotation (self, request, context):
@@ -111,7 +92,6 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 	"""
         MSG_from_Client="THis is cpu usage within 1 min"
 	cpu_util=psutil.cpu_percent(interval=1)
-
 	return GT_balance_pb2.CPUutilReply(message=MSG_from_Client,cpu_util=cpu_util)
 
 
@@ -132,11 +112,11 @@ def serve_based_addr(addr, port):
     except KeyboardInterrupt:
         server.stop(0)
 	is_continued=False
-	print("Average_Server_Process_time", sum(ServerProcessTime)/len(ServerProcessTime))
+	print("Average_Server_Process_time", sum(ServerProcessTime[0])/len(ServerProcessTime[0]))
 	with open(path_w+'/serve_time.csv', mode='w') as f:
 		writer=csv.writer(f, lineterminator='\n')
-		for val in ServerProcessTime:
-			writer.writerow([val]) 
+		for processtime in ServerProcessTime:
+			writer.writerow([processtime]) 
 	print("End")
 
 def GetSensorsLoop():
@@ -172,7 +152,6 @@ if __name__ == '__main__':
     args =sys.argv
     print(args[1], args[2], args[3], args[4])
     print("Intensity:", args[4])
-    print("Intensity_type:", type(float(args[4])))
     global intensity
     intensity=args[4]
 

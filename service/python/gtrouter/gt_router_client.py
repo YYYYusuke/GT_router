@@ -6,19 +6,20 @@ import time
 import datetime
 import random
 from Queue import Queue
+import copy
 import heapq
 import threading
 import csv
-import pandas as pd # Myclass_below import RRclass
+import pandas as pd
+# Myclass_below import RRclass
 import HEAPclass
 import RRclass
 import RecordClass 
 
-
 #Jobs=[11,22,13,14,15,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 #Jobs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 global Jobs
-
+global MonitorQueueList
 Balancer_Queue=Queue()
 Jobs_Queue=Queue()
 KID1_Queue=Queue()
@@ -39,7 +40,6 @@ CPU_temp_state=[0,0,0,0,0,0]
 CPU_util_state=[0,0,0,0,0]
 Fan_state=[0,0,0,0,0]
 CPU_temp_state=[0,0,0,0,0]
-
 
 # For static
 #KID_servers=[KID1, KID3, KID5, KID7, KID9, KID11]
@@ -64,7 +64,6 @@ def Run_KID(IP_Port, Server_Name, Queue):
         stub=Connect_servers(IP_Port, Server_Name)
         # Getting a job from own queue
         cpu_core=Queue.get()
-        #timeout=random.randint(1,5)
 	timeout=1
         Process_Request(stub, cpu_core, timeout)
         time.sleep(1)
@@ -95,15 +94,21 @@ def ListenServeState_KID(IP_Port, Server_Name, state_num):
 	global CPU_temp_state
 	global Fan_state
 	global E_time
+	global MonitorQueueList
+	MonitorQueueList=[]
+
 	nowi=time.time()
         CPU_util_state[state_num]=Get_CPUutil(stub)
 	CPU_temp_state[state_num]=Get_CPUtemp(stub)
 	Fan_state[state_num]=Get_FAN(stub)
 	elapsed_CPUutil=time.time()-nowi
 	E_time.append(elapsed_CPUutil)
+	
+	MonitorQueueList=[MonitorQueueContents(KID1_Queue), MonitorQueueContents(KID3_Queue), MonitorQueueContents(KID7_Queue)]
         print("CPU_utilization: ",  CPU_util_state)
         print("CPU_Temperature: ", CPU_temp_state)
         print("Local Fan Rotation speed:", Fan_state)
+        print("Queue list: ", MonitorQueueList)
         print("----------------------------------------")
 
 def Connect_servers(server_addr_port, server_name):
@@ -112,6 +117,15 @@ def Connect_servers(server_addr_port, server_name):
     response = stub.SayHello(GT_balance_pb2.HelloRequest(name=server_name))
     return stub
 
+def MonitorQueueContents(KID_Queue):
+    Contents=[]
+    queue_copy=Queue()
+    queue_copy.queue=copy.deepcopy(KID_Queue.queue)
+    for i in range(KID_Queue.qsize()):
+	tmp=queue_copy.get()
+	Contents.append(tmp)
+    return Contents
+    
 def Get_CPUutil(stub):
     response = stub.GetCPUutil(GT_balance_pb2.HelloRequest(name='Give me cpu_usage'))
     return response.cpu_util
@@ -166,48 +180,11 @@ def RRbin():
         KID9_Queue=hoge.Enqueue_TO_KID(KID9_Queue, Balancer_Queue)
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
 
-def ThermalBased_static():
-    print("ThermalBased_static")
-    hoge=RRclass.RR() # Make an instance
-    #ThermalBased
-    # Sorting algorithms part
-    hoge=RRclass.RR() # Make an instance
-    global Static_CPU_temp_state
-    global Balancer_Queue
-    cores=QueueTolist(Balancer_Queue)
-    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
-    print("Balancer_queue_before_sorting", cores)
-    heapsort=HEAPclass.HEAP()
-    sortd=heapsort.heap_route(Static_CPU_temp_state, cores )
-    Balancer_Queue=hoge.Six_Enqueue(sortd)
-    print("Balancer_Queue_size_after_sorting=", Balancer_Queue.qsize())
-    # Queueing part
-    RRbin()
-
-def CPUBased_static():
-    print("CPUBased_static")
-    hoge=RRclass.RR() # Make an instance
-    #CPUBased
-    # Sorting alogorithm part
-    hoge=RRclass.RR() # Make an instance
-    global Static_CPU_util_state
-    global Balancer_Queue
-    cores=QueueTolist(Balancer_Queue)
-    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
-    print("Balancer_queue_before_sorting", cores)
-    heapsort=HEAPclass.HEAP()
-    sortd=heapsort.heap_route(Static_CPU_util_state, cores )
-    Balancer_Queue=hoge.Six_Enqueue(sortd)
-    print("Balancer_Queue_size_after_sorting=", Balancer_Queue.qsize())
-    # Queueing part
-    RRbin()
-
 def CPUBased_dynamic():
     print("CPUBased_dynamic")
     hoge=RRclass.RR() # Make an instance
     # Sorting alogorithm part
-    global CPU_util_state
-    global Balancer_Queue
+    global CPU_util_state, Balancer_Queue
     cores=QueueTolist(Balancer_Queue)
     print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
     print("Balancer_queue_before_sorting", cores)
@@ -234,9 +211,7 @@ def CPUBased_dynamic():
 def ThermalBased_dynamic():
     print("ThermalBased_dynamic")
     hoge=RRclass.RR() # Make an instance
-    # CPUBased
-    global CPU_temp_state
-    global Balancer_Queue
+    global CPU_temp_state, Balancer_Queue
     cores=QueueTolist(Balancer_Queue)
     print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
     print("Balancer_queue_before_sorting", cores)
@@ -285,59 +260,13 @@ def RunBalancing():
 	elapsed_algo = t_algo2 - t_algo1
 	Algorithm_time.append(elapsed_algo)
 	
-def GetSensorsLoop():
-    fuga=RecordClass.Record()
-    while is_continued:
-	fuga.GetSensors()
-	time.sleep(1)
-
-def GetFANLoop():
-    fuga=RecordClass.Record()
-    while is_continued:
-	fuga.GetFanRotation()
-	time.sleep(1)
-
-def GetCputilLoop():
-    fuga=RecordClass.Record()
-    while is_continued:
-	fuga.GetCPUutil()
-	time.sleep(1)
-
-def GetPSLoop():
-    fuga=RecordClass.Record()
-    while is_continued:
-	fuga.GetPSutil()
-	time.sleep(1)
-
 def Daemon(func, IP_addr, Server_Name, int_or_queue):
-     
     thread=threading.Thread(target=func, args=(IP_addr, Server_Name, int_or_queue))
     thread.setDaemon(True)
     thread.start()
 
-def RecordDaemon(func):
-    thread=threading.Thread(target=func)
-    thread.setDaemon(True)
-    thread.start()
-
-if __name__ == '__main__':
-    print("Cleaning old files.....")
-    
-    try:
-	os.remove(path_w+"/algo_time.csv")
-    except:
-	print("Algorithm_Time file is already deleted.")
-    
-    print("Start")
-    Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
-    Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
-    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 2)
-    Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 3)
-    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 4) 
-    time.sleep(1)
-    
+def OnePortConnection():
     # ONE PORT CONNECTION
-    """
     Daemon(Run_KID, '130.207.110.11:111', 'KID1', KID1_Queue)
     time.sleep(1)
     Daemon(Run_KID, 'localhost:111', 'KID3', KID3_Queue)
@@ -347,7 +276,8 @@ if __name__ == '__main__':
     Daemon(Run_KID, '130.207.110.19:111', 'KID9', KID9_Queue)
     time.sleep(1)
     Daemon(Run_KID, '130.207.110.21:111', 'KID11', KID11_Queue)
-    """
+	
+def TwoPortConnection():
     # TWO PORT CONNECTION
     Daemon(Run_KID_TWOPorts, '130.207.110.11', 'KID1', KID1_Queue)
     time.sleep(1)
@@ -359,7 +289,46 @@ if __name__ == '__main__':
     time.sleep(1)
     Daemon(Run_KID_TWOPorts, '130.207.110.21', 'KID11', KID11_Queue)
     time.sleep(1)
+
+def TestConnection():
+    print("Test connections have been made.")
+    Daemon(Run_KID_TWOPorts, 'localhost', 'KID3', KID3_Queue)
+    time.sleep(1)
+
+def ServerMonitors():
+    Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
+    Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
+    Daemon(ListenServeState_KID, '130.207.110.17:111', 'KID7', 2)
+    Daemon(ListenServeState_KID, '130.207.110.19:111', 'KID9', 3)
+    Daemon(ListenServeState_KID, '130.207.110.21:111', 'KID11', 4) 
+    time.sleep(1)
+
+def TestServerMonitors():
+    print("The test has been started !!")
+    Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
+    time.sleep(1)
+
+if __name__ == '__main__':
+   
+    # Cleaning old file part
+    print("Cleaning old files.....")
+    try:
+	os.remove(path_w+"/algo_time.csv")
+    except:
+	print("Algorithm_Time file is already deleted.")
     
+    print("Start")
+
+    # Monitoring part 
+    #ServerMonitors()
+    TestServerMonitors()
+ 
+    # Getting Jobs part (having the connection between servers and the balancer)
+    #OnePortConnection()
+    #TwoPortConnection()
+    TestConnection()
+    
+    # Balancing part
     thread=threading.Thread(target=(RunBalancing))
     thread.setDaemon(True)
     thread.start()
@@ -367,7 +336,8 @@ if __name__ == '__main__':
     # This is going to kill the subprocess just in case that they are going to be alive after the main proces is gone.
     time.sleep(300)
     is_continued=False
-
+    
+    # Recording part
     print("Average_Algorithm_time: ", sum(Algorithm_time)/len(Algorithm_time))
     with open(path_w+'/algo_time.csv', mode='w') as f:
 	writer=csv.writer(f, lineterminator='\n')

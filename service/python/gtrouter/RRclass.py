@@ -1,7 +1,5 @@
 from Queue import Queue
 
-# For static round robin balancing
-
 Jobs_queue = Queue()
 Kid_queue = Queue()
 
@@ -47,13 +45,4 @@ class RR:
         #print("Dequeue:%d" %i)
       return i
 
-    def rr(self):
-      while not Jobs_queue.empty():
-        
-        Enqueue_TO_KID1(Jobs_queue)
-        Enqueue_TO_KID3(Jobs_queue)
-        Enqueue_TO_KID5(Jobs_queue)
-      
-      print("Done round robing")
-      print("KID1 queue size is %d" % Kid1_queue.qsize())
 
