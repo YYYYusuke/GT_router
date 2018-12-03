@@ -115,8 +115,12 @@ def serve_based_addr(addr, port):
 	print("Average_Server_Process_time", sum(ServerProcessTime[0])/len(ServerProcessTime[0]))
 	with open(path_w+'/serve_time.csv', mode='w') as f:
 		writer=csv.writer(f, lineterminator='\n')
-		for processtime in ServerProcessTime:
+		for processtime in ServerProcessTime[0]:
 			writer.writerow([processtime]) 
+	with open(path_w+'/job_intensity.csv', mode='w') as f:
+		writer=csv.writer(f, lineterminator='\n')
+		for job_intensity in ServerProcessTime[1]:
+			writer.writerow([job_intensity]) 
 	print("End")
 
 def GetSensorsLoop():

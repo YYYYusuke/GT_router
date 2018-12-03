@@ -104,7 +104,7 @@ def ListenServeState_KID(IP_Port, Server_Name, state_num):
 	elapsed_CPUutil=time.time()-nowi
 	E_time.append(elapsed_CPUutil)
 	
-	MonitorQueueList=[MonitorQueueContents(KID1_Queue), MonitorQueueContents(KID3_Queue), MonitorQueueContents(KID7_Queue)]
+	MonitorQueueList=[MonitorQueueContents(KID1_Queue), MonitorQueueContents(KID3_Queue), MonitorQueueContents(KID7_Queue), MonitorQueueContents(KID9_Queue), MonitorQueueContents(KID11_Queue)]
         print("CPU_utilization: ",  CPU_util_state)
         print("CPU_Temperature: ", CPU_temp_state)
         print("Local Fan Rotation speed:", Fan_state)
@@ -291,6 +291,8 @@ def TwoPortConnection():
     time.sleep(1)
 
 def TestConnection():
+    Daemon(Run_KID_TWOPorts, '130.207.110.11', 'KID1', KID1_Queue)
+    time.sleep(1)
     print("Test connections have been made.")
     Daemon(Run_KID_TWOPorts, 'localhost', 'KID3', KID3_Queue)
     time.sleep(1)
@@ -305,6 +307,7 @@ def ServerMonitors():
 
 def TestServerMonitors():
     print("The test has been started !!")
+    Daemon(ListenServeState_KID, '130.207.110.11:111', 'KID1', 0)
     Daemon(ListenServeState_KID, 'localhost:111', 'KID3', 1)
     time.sleep(1)
 
