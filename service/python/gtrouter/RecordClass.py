@@ -7,6 +7,7 @@ import os
 from threading import Thread
 from datetime import datetime
 import re
+
 """
 State_recorder.py is used for the purpose of tracking CPU ulilization, CPU temperature, and Fan rotation speed.
 Dynamic load balancing is based on uptime and IPMItool command. However this script also gets internal server's state 
@@ -74,24 +75,4 @@ class Record:
 			f.write(str(datetime.now()) + ',' + str(PS) +'\n')
 			#f.write(str(time.time()) + ',' + str(PS) +'\n')
 		return PS
-
-	def GetCPUtempLoop(self, is_continued):
-		while is_continued:
-			self.GetCPUtemp()
-
-	def GetFanLoop(self, is_continued):
-		while is_continued:
-			self.GetFanRotation()
-
-	def GetCPUutilLoop(self, is_continued):
-		while is_continued:
-			self.GetCPUutil()
-
-	def GetPSLoop(self, is_continued):
-		while is_continued:
-			self.GetPSutil()
-
-	def GetSensorsLoop(self, is_continued):
-		while is_continued:
-			self.GetSensors()
 

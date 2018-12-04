@@ -1,6 +1,6 @@
 from concurrent import futures
 import time
-import datetime
+from datetime import datetime
 import subprocess
 import grpc
 import os
@@ -21,7 +21,7 @@ import multiprocessing as multi
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 is_continued = True
 path_w='/nethome/ynakajo6/local_logs'
-ServerProcessTime=[[], []]
+ServerProcessTime=[[], [], []]
 
 class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 
@@ -49,6 +49,7 @@ class Greeter(GT_balance_pb2_grpc.GreeterServicer):
 	global ServerProcessTime
 	ServerProcessTime[0].append(elapsed_time)
 	ServerProcessTime[1].append(job_intensity)
+	ServerProcessTime[2].append(datetime.now())
         return GT_balance_pb2.HelloReply(message='Job (Cores= %s) is completed' % num_cpu)
 
     def GetCPUtemp (self, request, context):
@@ -121,6 +122,10 @@ def serve_based_addr(addr, port):
 		writer=csv.writer(f, lineterminator='\n')
 		for job_intensity in ServerProcessTime[1]:
 			writer.writerow([job_intensity]) 
+	with open(path_w+'/process_timestamp.csv', mode='w') as f:
+		writer=csv.writer(f, lineterminator='\n')
+		for time_stamp in ServerProcessTime[2]:
+			writer.writerow([time_stamp]) 
 	print("End")
 
 def GetSensorsLoop():
