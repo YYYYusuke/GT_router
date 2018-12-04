@@ -21,9 +21,11 @@ Written by nakajo@west.sd.keio.ac.jp
 - sudo python -m pip install grpcio
 - sudo python -m pip install grpcio-tools googleapis-common-protos
 
-## References
-
 ## Initiating .proto
 - python -m grpc_tools.protoc -I../../protos --python_out=. --grpc_python_out=. ../../protos/GT_balance.proto
 
+## TroubleShooting
+- when rebooting the node, you need to run "iptables-restore-c < /etc/iptables.conf"
+
+## References
 

@@ -95,7 +95,7 @@ def ListenServeState_KID(IP_Port, Server_Name, state_num):
 	global Fan_state
 	global E_time
 	global MonitorQueueList
-	MonitorQueueList=[]
+	#MonitorQueueList=[]
 
 	nowi=time.time()
         CPU_util_state[state_num]=Get_CPUutil(stub)
@@ -181,12 +181,11 @@ def RRbin():
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
 
 def CPUBased_dynamic():
+    global CPU_util_state, Balancer_Queue
     print("CPUBased_dynamic")
     hoge=RRclass.RR() # Make an instance
     # Sorting alogorithm part
-    global CPU_util_state, Balancer_Queue
     cores=QueueTolist(Balancer_Queue)
-    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
     print("Balancer_queue_before_sorting", cores)
     heapsort=HEAPclass.HEAP()
     sortd=heapsort.heap_route(CPU_util_state, cores )
@@ -209,11 +208,10 @@ def CPUBased_dynamic():
         KID11_Queue=hoge.Enqueue_TO_KID(KID11_Queue, Balancer_Queue)
 
 def ThermalBased_dynamic():
+    global CPU_temp_state, Balancer_Queue
     print("ThermalBased_dynamic")
     hoge=RRclass.RR() # Make an instance
-    global CPU_temp_state, Balancer_Queue
     cores=QueueTolist(Balancer_Queue)
-    print("Balancer_Queue_size_before_sorting =", Balancer_Queue.qsize())
     print("Balancer_queue_before_sorting", cores)
     heapsort=HEAPclass.HEAP()
     sortd=heapsort.heap_route(CPU_temp_state, cores )
@@ -250,8 +248,6 @@ def RunBalancing():
 
         GetFiveCores()
        	RRbin()
-	#ThermalBased_static()
-
 	#CPUBased_dynamic()
 	#ThermalBased_dynamic()
 	time.sleep(1)
@@ -323,13 +319,13 @@ if __name__ == '__main__':
     print("Start")
 
     # Monitoring part 
-    #ServerMonitors()
-    TestServerMonitors()
+    ServerMonitors()
+    #TestServerMonitors()
  
     # Getting Jobs part (having the connection between servers and the balancer)
     #OnePortConnection()
-    #TwoPortConnection()
-    TestConnection()
+    TwoPortConnection()
+    #TestConnection()
     
     # Balancing part
     thread=threading.Thread(target=(RunBalancing))
